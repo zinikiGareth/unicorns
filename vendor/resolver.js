@@ -29,6 +29,7 @@ define("resolver",
   var underscore = Ember.String.underscore;
   var classify = Ember.String.classify;
   var get = Ember.get;
+  var unicorns = {};
 
   function parseName(fullName) {
     var nameParts = fullName.split(":"),
@@ -83,10 +84,33 @@ define("resolver",
     var name = parsedName.fullNameWithoutType;
 
     var moduleName = prefix + '/' +  pluralizedType + '/' + name;
-
+    if (parsedName.type == 'template' && name.indexOf('unicorn/') === 0) {
+      moduleName = name;
+    }
+    
     // allow treat all dashed and all underscored as the same thing
     // supports components with dashes and other stuff with underscores.
     var normalizedModuleName = chooseModuleName(requirejs._eak_seen, moduleName);
+
+    // TODO: I think we should pass down longer names (e.g. receipt/whotels/expense/member) and just prepend "unicorn/" and append "/unicorn"
+    if (parsedName.type == 'unicorn') {
+      var unicorn = parsedName.fullNameWithoutType;
+      var path = "unicorn/receipt/whotels/expense/" + unicorn;
+      console.log("Unicorn " + unicorn + " requested");
+      if (unicorns[unicorn])
+        return unicorns[unicorn];
+      var value = new Ember.RSVP.Promise(function(resolve, reject) {
+        $.getScript("/" + unicorn + "-amd.js").done(function(script, textStatus) {
+          resolve(require(path + "/unicorn", null, null, true));
+        }).fail(function() {
+          console.log("could not resolve unicorn " + unicorn);
+          throw new Error("could not resolve unicorn " + unicorn);
+        });
+      });
+      var ret = { create: function() { console.log("injections = " + arguments); return { path: path, promise: value, injections: arguments }; }};
+      unicorns[unicorn] = ret;
+      return ret;
+    }
 
     if (requirejs._eak_seen[normalizedModuleName]) {
       var module = require(normalizedModuleName, null, null, true /* force sync */);

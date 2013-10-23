@@ -16,9 +16,27 @@ var UnicornView = Ember.View.extend({
     var model = template.get('content');
     var container = template.get('container');
     console.log("The mode is " + mode);
-    if (mode == 'envelope') {
+    if (mode == 'sandbox') {
+      options.data.buffer.push("<div>Sandbox case -- too hard for me</div>");
+    } else if (mode == 'modal') {
+      options.data.buffer.push("<div>Modal case -- too hard for me</div>");
+    } else if (mode == 'envelope') {
       var envtemplate = container.lookup("template:envelopes/" + model.constructor.typeKey);
       envtemplate(template, options);
+    } else if (mode == 'goring') {
+      var goring = container.lookup("unicorn:member");
+      var tmp = {};
+      var guid = Ember.guidFor(tmp);
+      options.data.buffer.push("<div id='unicorn-" + guid + "'></div>");
+      goring.promise.then(function(member) {
+        console.log("member = ", member);
+        var unicornTemplate = container.lookup('template:' + goring.path + '/template');
+        var view = Ember.View.create({
+          template: unicornTemplate,
+          model: template
+        });
+        view.appendTo('#' + guid);
+      })
     } else
       options.data.buffer.push("<div class='unicorn'>This is where we need to render unicorn #" + model.get('id') + "</div>");
   }
