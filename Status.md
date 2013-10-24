@@ -45,7 +45,7 @@ do with run loops or delays or promises that I can't that will make all this hap
 5. Generally review everything around here and offer comments (given that's its wildly incomplete; see below)
 
 Not yet done
---------
+------------
 
 The other things which are not done which I do care about in this example are:
 
@@ -54,6 +54,31 @@ The other things which are not done which I do care about in this example are:
    having working contracts is vitally important to everything else we do.
  * Running in node
    I am using node for my simple tooling, but I am not attempting (yet) to run these cards in node.
+ * Getting anything working server side
 
 It's my plan to come back to these in a little while, but I have other concerns to wrap my head around and Ember is blowing my
 mind right now.
+
+Other Things
+------------
+
+There are a number of other things that either don't reflect the world as I would like it to be, or places where I have
+taken shortcuts that I know I'll have to go back and fix.
+
+* The code to render a unicorn is pretty much hardcoded at the moment.  Obviously this is wrong and should reflect the
+create operation followed by render contract pattern.
+
+* I feel that the container wrapping the unicorns in receipts.js should be pulled out and made its own thing (for which I
+have created a directory, but I think it's empty so not in the repo).  The idea here would be that these would correspond
+to Chris' six layout archetypes.
+
+* I would like to refactor the hierarchy so that things that go together are grouped together, i.e. by unicorn/component
+rather than by role.  This requires more tooling changes.
+
+* I think the way I would ultimately like the unicorn controller/view to work is as an Ember Handlebars Helper, but I'm not
+even sure I know what that means.  What I mean is I would like to write something like "{{unicorn}}" to indicate that
+the current model should be rendered here as a unicorn.  Options could allow it to say "in sandbox mode" or whatever.
+
+* I intend to refactor this code to be "unicorns all the way down".  At the moment, there is too much stuff in the "container"
+for my liking, but I'm trying to get something working and then refactor rather than push too hard for what I really believe
+in.
