@@ -25,7 +25,8 @@ var list = Ember.Component.extend({
   // But this is a specific instance of a general collision problem, so ultimately we
   // should replace this with some kind of "markerArray"
   // To make matters worse, I am using "addObject" which doesn't seem to have an index,
-  // but unlike "splice" does invoke the observers.
+  // but unlike "splice" does invoke the observers.  Presumably there is some Ember.Array method
+  // that adds things at an index, but I'm not seeing it in the doc.
   addBoxFor: function(pos, unicorn) {
     var self = this;
     var container = this.get('container');
@@ -46,6 +47,9 @@ var list = Ember.Component.extend({
           self.boxes.addObject(view);
         });
       });
+    } else if (this.get('mode') == 'envelope') {
+      var envtemplate = container.lookup("template:envelopes/" + this.get('envelope'));
+      self.boxes.addObject(Ember.View.create({template: envtemplate, unicorn: unicorn}));
     } else
       throw new Error("Cannot handle the unicorn mode " + this.get('mode'));
   }

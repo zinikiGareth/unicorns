@@ -1,6 +1,5 @@
 import Resolver from 'resolver';
 import Router from 'container/router';
-import UnicornView from 'container/views/unicorn';
 
 var Application = Ember.Application.extend({
   modulePrefix: 'container',
@@ -8,8 +7,6 @@ var Application = Ember.Application.extend({
 });
 
 var App = Application.create({ LOG_TRANSITIONS: true });
-
-App.UnicornView = UnicornView;
 
 App.IndexController = Ember.ObjectController.extend({
   init: function() {
