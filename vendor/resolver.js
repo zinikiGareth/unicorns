@@ -76,7 +76,7 @@ define("resolver",
   }
 
   function resolveOther(parsedName) {
-//    console.log(parsedName);
+    console.log("resolveOther:", parsedName);
     var prefix = this.namespace.modulePrefix;
     Ember.assert('module prefix must be defined', prefix);
 
@@ -86,6 +86,10 @@ define("resolver",
     var moduleName = prefix + '/' +  pluralizedType + '/' + name;
     if (parsedName.type == 'template' && name.indexOf('unicorn/') === 0) {
       moduleName = name;
+    } else if (parsedName.type == 'component' && name.indexOf('unicorn-') === 0) {
+      moduleName = 'archetypes/' + name;
+    } else if (parsedName.type == 'template' && name.indexOf('components/unicorn-') === 0) {
+      moduleName = 'archetypes/' + name.substring(11) + "-template";
     }
     
     // allow treat all dashed and all underscored as the same thing
