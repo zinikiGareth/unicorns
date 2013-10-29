@@ -20,15 +20,34 @@ var list = Ember.Component.extend({
       this.addBoxFor(i, unicorns.objectAt(i));
   },
   
+  // Because of all the asynchronity, we stand a good chance of not putting things
+  // in the place that we really want them.
+  // But this is a specific instance of a general collision problem, so ultimately we
+  // should replace this with some kind of "markerArray"
+  // To make matters worse, I am using "addObject" which doesn't seem to have an index,
+  // but unlike "splice" does invoke the observers.
   addBoxFor: function(pos, unicorn) {
     var self = this;
-    // TODO: resolve promise, add then("add to boxes");
-    console.log("added", pos, unicorn);
-    console.log(unicorn instanceof Ember.RSVP.Promise);
+    var container = this.get('container');
+    
+    // resolve promise (if any)
     if (unicorn instanceof Ember.RSVP.Promise) {
       unicorn.then(function(resolved) { self.addBoxFor(pos, resolved); });
       return;
     }
+
+    // add to list of boxes for rendering
+    if (this.get('mode') == 'goring') {
+      var name = unicorn.get('unicorn');
+      var goring = container.lookup("unicorn:" + name);
+      console.log("found code at " + goring);
+      goring.promise.then(function(code) {
+        code.render(unicorn).then(function(view) {
+          self.boxes.addObject(view);
+        });
+      });
+    } else
+      throw new Error("Cannot handle the unicorn mode " + this.get('mode'));
   }
 });
 

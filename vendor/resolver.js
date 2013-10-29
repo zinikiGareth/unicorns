@@ -105,7 +105,9 @@ define("resolver",
         return unicorns[unicorn];
       var value = new Ember.RSVP.Promise(function(resolve, reject) {
         $.getScript("/" + unicorn + "-amd.js").done(function(script, textStatus) {
+          console.log("resolved this");
           resolve(require(path + "/unicorn", null, null, true));
+          console.log("and succeeded in dealing with it");
         }).fail(function() {
           console.log("could not resolve unicorn " + unicorn);
           throw new Error("could not resolve unicorn " + unicorn);
