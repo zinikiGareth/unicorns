@@ -1,9 +1,11 @@
 import Resolver from 'resolver';
+import UnicornLib from 'unicornlib/unicornlib';
 import Router from 'container/router';
 
 var Application = Ember.Application.extend({
   modulePrefix: 'container',
-  Resolver: Resolver
+  Resolver: Resolver,
+  Unicorn : UnicornLib
 });
 
 var App = Application.create({ LOG_TRANSITIONS: true });

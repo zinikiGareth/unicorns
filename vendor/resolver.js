@@ -76,7 +76,7 @@ define("resolver",
   }
 
   function resolveOther(parsedName) {
-    console.log("resolveOther:", parsedName);
+//    console.log("resolveOther:", parsedName);
     var prefix = this.namespace.modulePrefix;
     Ember.assert('module prefix must be defined', prefix);
 
@@ -100,20 +100,18 @@ define("resolver",
     if (parsedName.type == 'unicorn') {
       var unicorn = parsedName.fullNameWithoutType;
       var path = "unicorn/receipt/whotels/expense/" + unicorn;
-      console.log("Unicorn " + unicorn + " requested");
+//      console.log("Unicorn " + unicorn + " requested");
       if (unicorns[unicorn])
         return unicorns[unicorn];
       var value = new Ember.RSVP.Promise(function(resolve, reject) {
         $.getScript("/" + unicorn + "-amd.js").done(function(script, textStatus) {
-          console.log("resolved this");
           resolve(require(path + "/unicorn", null, null, true));
-          console.log("and succeeded in dealing with it");
         }).fail(function() {
           console.log("could not resolve unicorn " + unicorn);
           throw new Error("could not resolve unicorn " + unicorn);
         });
       });
-      var ret = { create: function() { console.log("injections = " + arguments); return { path: path, promise: value, injections: arguments }; }};
+      var ret = { create: function() { return { path: path, promise: value, injections: arguments }; }};
       unicorns[unicorn] = ret;
       return ret;
     }

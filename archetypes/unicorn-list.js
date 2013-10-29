@@ -41,7 +41,6 @@ var list = Ember.Component.extend({
     if (this.get('mode') == 'goring') {
       var name = unicorn.get('unicorn');
       var goring = container.lookup("unicorn:" + name);
-      console.log("found code at " + goring);
       goring.promise.then(function(code) {
         code.render(unicorn).then(function(view) {
           self.boxes.addObject(view);
