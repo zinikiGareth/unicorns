@@ -1,3 +1,6 @@
+import Oasis from 'oasis';
+import SandboxWrapper from 'unicornlib/sandboxWrapper';
+
 var list = Ember.Component.extend({
   boxes: Em.A(),
   
@@ -38,7 +41,21 @@ var list = Ember.Component.extend({
     }
 
     // add to list of boxes for rendering
-    if (this.get('mode') == 'goring') {
+    if (this.get('mode') == 'sandbox') {
+      var PingService = Oasis.Service.extend({
+        
+      });
+      
+      // TODO: create this somewhere else?
+      var oasis = new Oasis();
+      var sandbox = oasis.createSandbox({ url:'pingpong.js', 
+        capabilities: ['ping'],
+        services: {
+          ping: PingService
+        }
+      });
+      self.boxes.addObject(SandboxWrapper.create({sandbox:sandbox}));
+    } else if (this.get('mode') == 'goring') {
       var name = unicorn.get('unicorn');
       var goring = container.lookup("unicorn:" + name);
       goring.promise.then(function(code) {

@@ -38,7 +38,14 @@ In order to render the unicorn, it's necessary to put it in a container.  These 
 level, and are ultimately intended to correspond to Chris' six archetypes.  I've vaguely modelled our current need as a "list"
 of receipts, and thus I've created an Ember.Component and called it "unicorn-list".  This takes a "mode" parameter which says
 how you want the unicorns to be rendered, and I've already implemented "envelope" and "goring" (hopefully correctly).
-I haven't yet touched the "sandbox" and "modal" cases.
+
+I have briefly touched on Oasis and the "sandbox" case for rendering.  In support of this, I have created a "SandboxWrapper"
+class which is intended to be an Ember-ization of the IFrame that is created inside the Sandbox.  So far, I have only managed
+to initialize Oasis, create a sandbox and put it in the right place.  I am trying to follow the example on the Oasisjs.com web
+site at the moment and get that working before doing the "proper" job of rendering a unicorn.
+
+I haven't yet touched the "modal" case - but I'm guessing that's just a different way of presenting the sandbox, and I'm not
+sure it really applies for a "list" of sandboxes, but rather just for a single sandbox.
 
 In the process of doing this, I have hacked the resolver mercilessly to get the functionality I want.  I don't apologize for
 this; part of what I think I need to do is to change the naming conventions to match my world-view of what "units" are.
