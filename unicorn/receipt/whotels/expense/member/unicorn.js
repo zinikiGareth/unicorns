@@ -1,11 +1,5 @@
-import MyTemplate from 'unicorn/receipt/whotels/expense/member/template';
+import Render from 'unicorn/receipt/whotels/expense/member/implements/render';
 
-var unicorn = {
-    render: function() {
-      return new Ember.RSVP.Promise(function (resolve) {
-        resolve(Ember.View.create({template:MyTemplate}));
-      });
-    }
-};
+var unicorn = $.extend({}, Render);
 
 export default unicorn;
