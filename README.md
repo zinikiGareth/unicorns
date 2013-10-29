@@ -18,6 +18,9 @@ multiple projects.
 
 The project structure is thus like this:
 
+archetypes/
+  code for the six layout archetypes
+
 container/
   the main application container; this is what would be the "application" repository
   
@@ -33,12 +36,13 @@ unicorns/
   reports/**/
     where unicorns for different report types live
 
+  each sub-directory of receipts/ and reports/ containing a "unicorn.js" is the root of a mythical "unicorn" repository;
+    the intervening directories are for namespace purposes.
+
 vendor/
   libraries we depend on
-  unicorn/
+  unicornlib/
     the base unicorn library in module form
-each sub-directory of receipts/ and reports/ containing a "unicorn.js" is the root of a mythical "unicorn" repository;
-the intervening directories are for namespace purposes.
 
 The "repositories" under "container/" and the "unicorns/area/name" follow the same basic format:
 
