@@ -50,6 +50,9 @@ var list = Ember.Component.extend({
       var PingService = Oasis.Service.extend({
         initialize: function() {
           this.send('ping');
+          this.request('render').then(function(resp) {
+            console.log("Rendered");
+          });
         },
 
         events: {
@@ -60,9 +63,9 @@ var list = Ember.Component.extend({
       });
       
       var sandbox = oasis.createSandbox({ url:'pingpong.js', 
-        capabilities: ['ping'],
+        capabilities: ['fred'],
         services: {
-          ping: PingService
+          fred: PingService
         }
       });
       self.boxes.addObject(SandboxWrapper.create({sandbox:sandbox}));
