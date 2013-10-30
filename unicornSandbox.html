@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" >
+
+<!--  Putting this here means that I become dependent on my changes
+ I think it would be better to assemble my own 'oasis.js.html', which
+ it might be possible to rename through the Oasis sandbox API.
+ -->
+<script src='/vendor/almond.js' ></script>
+<script src='/vendor/uuid.core.js' ></script>
+<script src='/vendor/resolver.js' ></script>
+<script src='/vendor/jquery.js' ></script>
+<script src='/vendor/handlebars.js' ></script>
+<script src='/vendor/ember-latest.js' ></script>
+<script src='/vendor/rsvp.amd.js'></script>
+<script src='/vendor/message_channel.js'></script>
+<script src='/vendor/oasis.js'></script>
+<script src='/vendor/unicornlib-amd.js' ></script>
+<script src='/contract-amd.js' ></script>
+
+<script type='text/javascript'>
+    self.Oasis = require('oasis'); self.oasis = new self.Oasis(); self.oasis.autoInitializeSandbox();
+</script>
+</head>
+<body>
+</body>
+</html>

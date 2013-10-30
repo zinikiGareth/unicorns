@@ -100,7 +100,7 @@ define("resolver",
     if (parsedName.type == 'unicorn') {
       var unicorn = parsedName.fullNameWithoutType;
       var path = "unicorn/receipt/whotels/expense/" + unicorn;
-//      console.log("Unicorn " + unicorn + " requested");
+      console.log("Unicorn " + unicorn + " requested");
       if (unicorns[unicorn])
         return unicorns[unicorn];
       var value = new Ember.RSVP.Promise(function(resolve, reject) {
