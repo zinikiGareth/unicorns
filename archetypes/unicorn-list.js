@@ -1,5 +1,5 @@
 import Oasis from 'oasis';
-import RenderContract from 'contract/render';
+import UnicornLib from 'unicornlib/unicornlib';
 import UnicornSandbox from 'unicornlib/unicornSandbox';
 import UnicornGoring from 'unicornlib/unicornGoring';
 import UnicornEnvelope from 'unicornlib/unicornEnvelope';
@@ -51,31 +51,21 @@ var list = Ember.Component.extend({
     if (this.get('mode') == 'sandbox') {
       var name = unicorn.get('unicorn');
       
-      // TODO: Make this a one line "hey, I want a sandbox for this unicorn ... figure it all out, Boyo!"
-      var LoadService = Oasis.Service.extend({
-        initialize: function() {
-          // TODO: we should probably use the serializer ...
-          console.log("sending load");
-          this.send('load', {module:name, id: unicorn.get('id')});
-        }
-      });
-      
-      var rshash = RenderContract.oasisService();
-      var sandbox = oasis.createSandbox({
-        type: 'html',
-        url: 'unicornSandbox.html?unicorn=' + name,
-//        url:'pingpong.js', 
-        capabilities: ['_load','_render'],
-        services: {
-          _load: LoadService,
-          _render: rshash.service
-        }
-      });
-      self.boxes.addObject(UnicornSandbox.create({sandbox:sandbox}));
+      // somehow we need to get the list of unicorn capabilities
+      // this can be inferred from the unicorn code, but we DO NOT want to load that here
+      // Ideally, the tooling would have figured it out for us
 
-      var rc = RenderContract.clientProxy(rshash.instance);
-      console.log("rendering");
-      rc.render();
+      // At the very least we should be able to find from the resolver:
+//      var contracts = container.lookup('capabilities:' + name);
+      
+      // for now, just hard code it ...
+      var contracts = ['_load', '_render'];
+
+      var hash = UnicornLib.Util.createOasisSandbox(container, oasis, name, unicorn, contracts);
+      self.boxes.addObject(UnicornSandbox.create({sandbox:hash.sandbox}));
+
+      // and ask it to render itself ...
+      hash.horn.render.render();
     } else if (this.get('mode') == 'goring') {
       var name = unicorn.get('unicorn');
       var goring = container.lookup("unicorn:" + name);

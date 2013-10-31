@@ -1,6 +1,6 @@
-import Unicorn from 'unicornlib/unicornlib';
+import UnicornLib from 'unicornlib/unicornlib';
 
-var render = Unicorn.Contract.create({
+var render = UnicornLib.Contract.create({
   name: 'render',
   methods: {
     render: {
