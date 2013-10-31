@@ -31,41 +31,8 @@ function Bridge() {
   };
   
   this.setup = function(module) {
-    var self = this;
     this.torso = module;
-    var LoadConsumer = Oasis.Consumer.extend({
-      events: {
-        load: function(hash) {
-          console.log("in load");
-          self.mainHash = hash;
-          self.whenReady.resolve(self);
-        }
-      }
-    });
-    var RenderConsumer = Oasis.Consumer.extend({
-      requests: {
-        render: function() {
-          console.log('consumer render');
-          return new Oasis.RSVP.Promise(function(resolve) {
-            self.whenReady.promise.then(function() {
-              console.log('in actual render');
-              self.torso.unicorn = self.mainHash;
-              self.torso.render().then(function(view) {
-                view.append();
-                resolve(true);
-              });
-            });
-          });
-        }
-      }
-    });
-
-    this.oasis.connect({
-      consumers: {
-        load: LoadConsumer,
-        render: RenderConsumer
-      }
-    });
+    this.oasis.connect(module.oasisSandboxConnector(this));
   };
   
   this.getModuleNameFromLocation = function(href, param) {
