@@ -1,4 +1,5 @@
 import Oasis from 'oasis';
+import RenderContract from 'contract/render';
 import UnicornSandbox from 'unicornlib/unicornSandbox';
 import UnicornGoring from 'unicornlib/unicornGoring';
 import UnicornEnvelope from 'unicornlib/unicornEnvelope';
@@ -14,7 +15,6 @@ var list = Ember.Component.extend({
     this._super();
     this.get('unicorns').addArrayObserver({
       arrayWillChange: function() {
-        console.log("Will", arguments);
       },
       arrayDidChange: function(arr, start, remove, add) {
         for (var i=0;i<add;i++) {
@@ -50,31 +50,29 @@ var list = Ember.Component.extend({
     // add to list of boxes for rendering
     if (this.get('mode') == 'sandbox') {
       var name = unicorn.get('unicorn');
-      var PingService = Oasis.Service.extend({
+      var LoadService = Oasis.Service.extend({
         initialize: function() {
           // TODO: we should probably use the serializer ...
+          console.log("sending load");
           this.send('load', {module:name, id: unicorn.get('id')});
-          this.request('render').then(function(resp) {
-            console.log("Rendered");
-          });
-        },
-
-        events: {
-          pong: function() {
-            console.log("Service got a pong!");
-          }
         }
       });
       
+      var rshash = RenderContract.oasisService();
       var sandbox = oasis.createSandbox({
         oasisURL: 'unicornSandbox.html',
         url:'pingpong.js', 
-        capabilities: ['fred'],
+        capabilities: ['load','render'],
         services: {
-          fred: PingService
+          load: LoadService,
+          render: rshash.service
         }
       });
       self.boxes.addObject(UnicornSandbox.create({sandbox:sandbox}));
+
+      var rc = RenderContract.clientProxy(rshash.instance);
+      console.log("rendering");
+      rc.render();
     } else if (this.get('mode') == 'goring') {
       var name = unicorn.get('unicorn');
       var goring = container.lookup("unicorn:" + name);

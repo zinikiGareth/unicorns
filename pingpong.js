@@ -11,6 +11,7 @@ var Logger = require('oasis/logger');
 var Resolver = require('resolver');
 Logger.enable();
 
+console.log("in sandbox");
 var UnicornApp = Ember.Application.create({
   Resolver: Resolver,
   modulePrefix: 'container',
@@ -19,28 +20,30 @@ var UnicornApp = Ember.Application.create({
 });
 var container = UnicornApp.__container__;
 
-var FredConsumer = Oasis.Consumer.extend({
+var wrapperP = Oasis.RSVP.defer();
+var mainHash;
+var LoadConsumer = Oasis.Consumer.extend({
   events: {
     load: function(hash) {
+      mainHash = hash;
       var module = hash.module;
       console.log("requested module", module);
-      var wrapper = container.lookup("unicorn:" + module);
-      wrapper.promise.then(function(code) {
-        code.unicorn = hash;
-        code.render().then(function(view) {
-          view.append();
-        });
-      });
-
-    },
-    ping: function() {
-      console.log('consumer ping');
-      this.send('pong');
+      wrapperP.resolve(container.lookup("unicorn:" + module));
     }
-  },
+  }
+});
+var RenderConsumer = Oasis.Consumer.extend({
   requests: {
     render: function() {
       console.log('consumer render');
+      wrapperP.promise.then(function(wrapper) {
+        wrapper.promise.then(function(code) {
+          code.unicorn = mainHash;
+          code.render().then(function(view) {
+            view.append();
+          });
+        });
+      });
       return "hello";
     }
   }
@@ -48,6 +51,7 @@ var FredConsumer = Oasis.Consumer.extend({
 
 oasis.connect({
   consumers: {
-    fred: FredConsumer
+    load: LoadConsumer,
+    render: RenderConsumer
   }
 })
