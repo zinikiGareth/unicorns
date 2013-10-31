@@ -1,12 +1,6 @@
 <!DOCTYPE html>
 <html>
 <head>
-<meta http-equiv="X-UA-Compatible" content="IE=edge" >
-
-<!--  Putting this here means that I become dependent on my changes
- I think it would be better to assemble my own 'oasis.js.html', which
- it might be possible to rename through the Oasis sandbox API.
- -->
 <script src='/vendor/almond.js' ></script>
 <script src='/vendor/uuid.core.js' ></script>
 <script src='/vendor/resolver.js' ></script>
@@ -20,7 +14,15 @@
 <script src='/contract-amd.js' ></script>
 
 <script type='text/javascript'>
-    self.Oasis = require('oasis'); self.oasis = new self.Oasis(); self.oasis.autoInitializeSandbox();
+    var Bridge = require('unicornlib/bridge');
+    var bridge = new Bridge();
+    var moduleName = bridge.getModuleNameFromLocation(window.location.href, "unicorn");
+    console.log("unicorn is " + moduleName);
+    bridge.init();
+    var unicornP = bridge.container.lookup("unicorn:" + moduleName);
+    unicornP.promise.then(function(unicorn) {
+         bridge.setup(unicorn);
+    });
 </script>
 </head>
 <body>

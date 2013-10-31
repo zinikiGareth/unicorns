@@ -50,6 +50,8 @@ var list = Ember.Component.extend({
     // add to list of boxes for rendering
     if (this.get('mode') == 'sandbox') {
       var name = unicorn.get('unicorn');
+      
+      // TODO: Make this a one line "hey, I want a sandbox for this unicorn ... figure it all out, Boyo!"
       var LoadService = Oasis.Service.extend({
         initialize: function() {
           // TODO: we should probably use the serializer ...
@@ -60,8 +62,9 @@ var list = Ember.Component.extend({
       
       var rshash = RenderContract.oasisService();
       var sandbox = oasis.createSandbox({
-        oasisURL: 'unicornSandbox.html',
-        url:'pingpong.js', 
+        type: 'html',
+        url: 'unicornSandbox.html?unicorn=' + name,
+//        url:'pingpong.js', 
         capabilities: ['load','render'],
         services: {
           load: LoadService,

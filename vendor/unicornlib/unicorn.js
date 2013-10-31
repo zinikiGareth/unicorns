@@ -1,3 +1,5 @@
+import Oasis from 'oasis';
+
 var Unicorn = Ember.Object.extend({
   init: function() {
     var implArr = this.get('implements');
