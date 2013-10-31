@@ -65,10 +65,10 @@ var list = Ember.Component.extend({
         type: 'html',
         url: 'unicornSandbox.html?unicorn=' + name,
 //        url:'pingpong.js', 
-        capabilities: ['load','render'],
+        capabilities: ['_load','_render'],
         services: {
-          load: LoadService,
-          render: rshash.service
+          _load: LoadService,
+          _render: rshash.service
         }
       });
       self.boxes.addObject(UnicornSandbox.create({sandbox:sandbox}));

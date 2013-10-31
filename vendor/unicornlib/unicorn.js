@@ -12,7 +12,8 @@ var Unicorn = Ember.Object.extend({
   },
   oasisSandboxConnector: function(bridge) {
     var self = this;
-    var LoadConsumer = Oasis.Consumer.extend({
+    var consumers = {};
+    consumers['_load'] = Oasis.Consumer.extend({
       events: {
         load: function(hash) {
           console.log("in load");
@@ -21,7 +22,9 @@ var Unicorn = Ember.Object.extend({
         }
       }
     });
-    var RenderConsumer = Oasis.Consumer.extend({
+    
+    // just how special is actual render?
+    consumers['_render'] = Oasis.Consumer.extend({
       requests: {
         render: function() {
           console.log('consumer render');
@@ -40,10 +43,7 @@ var Unicorn = Ember.Object.extend({
     });
     
     return {
-      consumers: {
-        load: LoadConsumer,
-        render: RenderConsumer
-      }
+      consumers: consumers
     };
   }
 });
