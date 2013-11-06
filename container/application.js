@@ -1,3 +1,4 @@
+import Oasis from 'oasis';
 import Resolver from 'resolver';
 import UnicornLib from 'unicornlib/unicornlib';
 import Router from 'container/router';
@@ -28,6 +29,7 @@ Application.initializer({
   }
 })
 var App = Application.create({ LOG_TRANSITIONS: true, LOG_MODULE_RESOLVER: true });
+App.oasis = new Oasis();
 
 App.IndexController = Ember.ObjectController.extend({
   init: function() {

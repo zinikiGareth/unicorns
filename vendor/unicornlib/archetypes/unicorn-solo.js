@@ -4,8 +4,7 @@ import UnicornSandbox from 'unicornlib/unicornSandbox';
 import UnicornGoring from 'unicornlib/unicornGoring';
 import UnicornEnvelope from 'unicornlib/unicornEnvelope';
 
-// TODO: create this somewhere else?
-var oasis = new Oasis();
+var oasis = App.oasis;
 
 var solo = Ember.Component.extend({
   shown: null,
