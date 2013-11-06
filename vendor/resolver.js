@@ -87,9 +87,9 @@ define("resolver",
     if (parsedName.type == 'template' && name.indexOf('unicorn/') === 0) {
       moduleName = name;
     } else if (parsedName.type == 'component' && name.indexOf('unicorn-') === 0) {
-      moduleName = 'archetypes/' + name;
+      moduleName = 'unicornlib/archetypes/' + name;
     } else if (parsedName.type == 'template' && name.indexOf('components/unicorn-') === 0) {
-      moduleName = 'archetypes/' + name.substring(11) + "-template";
+      moduleName = 'unicornlib/archetypes/' + name.substring(11) + "-template";
     }
     
     // allow treat all dashed and all underscored as the same thing
