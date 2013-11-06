@@ -65,7 +65,7 @@ define("resolver",
   }
 
   function resolveRouter(parsedName) {
-//    console.log(parsedName);
+    console.log("resolving router:", parsedName);
     var prefix = this.namespace.modulePrefix;
     if (parsedName.fullName === 'router:main') {
       // for now, lets keep the router at app/router.js
@@ -76,7 +76,7 @@ define("resolver",
   }
 
   function resolveOther(parsedName) {
-//    console.log("resolveOther:", parsedName);
+    console.log("resolving other item:", parsedName);
     var prefix = this.namespace.modulePrefix;
     Ember.assert('module prefix must be defined', prefix);
 
@@ -99,12 +99,12 @@ define("resolver",
     // TODO: I think we should pass down longer names (e.g. receipt/whotels/expense/member) and just prepend "unicorn/" and append "/unicorn"
     if (parsedName.type == 'unicorn') {
       var unicorn = parsedName.fullNameWithoutType;
-      var path = "unicorn/receipt/whotels/expense/" + unicorn;
+      var path = "unicorn/" + unicorn;
 //      console.log("Unicorn " + unicorn + " requested");
       if (unicorns[unicorn])
         return unicorns[unicorn];
       var value = new Ember.RSVP.Promise(function(resolve, reject) {
-        $.getScript("/" + unicorn + "-amd.js").done(function(script, textStatus) {
+        $.getScript("/" + path + "-amd.js").done(function(script, textStatus) {
           resolve(require(path + "/unicorn", null, null, true));
         }).fail(function() {
           console.log("could not resolve unicorn " + unicorn);
