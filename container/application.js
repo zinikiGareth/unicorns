@@ -29,7 +29,6 @@ Application.initializer({
   }
 })
 var App = Application.create({ LOG_TRANSITIONS: true, LOG_MODULE_RESOLVER: true });
-App.oasis = new Oasis();
 
 App.IndexController = Ember.ObjectController.extend({
   init: function() {
