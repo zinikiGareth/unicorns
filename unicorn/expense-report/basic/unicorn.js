@@ -1,10 +1,22 @@
 import Unicorn from 'unicornlib/unicorn';
 import Render from 'unicorn/expense-report/basic/implements/render';
+import Actor from 'unicorn/expense-report/basic/actor/actor';
 
-var unicorn = Unicorn.create({
+// TODO: I feel this should all be wrapped up in a function()
+
+var actor = Actor.create();
+
+var unicorn = Unicorn.extend({
+  init: function() {
+    this._super();
+    this.addObserver('heart', function() {
+      console.log(this.get('heart'));
+      actor.set('heart', this.get('heart'));
+    });
+  },
+  heart: null,
+  actor: actor,
   implements: [Render]
-});
-
-unicorn.set('figureTotal', 'hello');
+}).create();
 
 export default unicorn;

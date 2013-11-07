@@ -37,7 +37,9 @@ function Util(Oasis, oasis) {
       var goring = emberContainer.lookup("unicorn:" + name);
       return new Oasis.RSVP.Promise(function(resolver) {
         goring.promise.then(function(code) {
-          code.heart = heart; // needed?  compare to "heart: ..." in UG creation below
+          // TODO: both of these are wrong ... we should implement & call the load contract
+          // with the heart id & possibly "state" info
+          code.set('heart', heart);
           code.render().then(function(view) {
             // TODO: need "horn"
             resolver({viewable:UnicornGoring.create({nestedView: view, heart: heart})});

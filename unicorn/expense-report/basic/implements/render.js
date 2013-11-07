@@ -8,7 +8,7 @@ var render = RenderContract.implement({
         resolve(Ember.View.create({
           template:MyTemplate,
           heart:self.get('heart'),
-          figureTotal: self.get('figureTotal')
+          figureTotal: self.get('actor').get('figureTotal')
         }));
       });
     }
