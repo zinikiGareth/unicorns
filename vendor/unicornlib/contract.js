@@ -1,7 +1,6 @@
 import Oasis from 'oasis';
 
 function createProxyMethod(channel, m, hash) {
-  console.log(hash);
   if (hash.kind == 'report') {
     return function() {
       var funArgs = arguments;
@@ -58,7 +57,6 @@ var Contract = Ember.Object.extend({
     var defer = Oasis.RSVP.defer();
     var ret = Oasis.Service.extend({
       initialize: function() {
-        console.log("in initialize");
         defer.resolve(this);
       },
       events: evhash,
@@ -75,7 +73,6 @@ var Contract = Ember.Object.extend({
     var intf = this.get('methods');
     for (var m in intf)
       if (intf.hasOwnProperty(m)) {
-        console.log(m);
         ret[m] = createProxyMethod(channel, m, intf[m]);
       }
     

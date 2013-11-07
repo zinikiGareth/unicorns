@@ -27,7 +27,6 @@ var Unicorn = Ember.Object.extend({
     consumers['_render'] = Oasis.Consumer.extend({
       requests: {
         render: function() {
-          console.log('consumer render');
           return new Oasis.RSVP.Promise(function(resolve) {
             bridge.whenReady.promise.then(function() {
               console.log('in actual render');
@@ -41,6 +40,26 @@ var Unicorn = Ember.Object.extend({
         }
       }
     });
+    
+    consumers['receiptEnvelope'] = Oasis.Consumer.extend({
+      events: {
+        show: function(arg) {
+          bridge.whenReady.promise.then(function() {
+            bridge.torso.show(arg);
+          });
+        }
+      },
+      requests: {
+        as: function() {
+          return new Oasis.RSVP.Promise(function(resolve) {
+            bridge.whenReady.promise.then(function() {
+              debugger;
+              resolve(bridge.torso.as());
+            });
+          })
+        }
+      }
+    })
     
     return {
       consumers: consumers

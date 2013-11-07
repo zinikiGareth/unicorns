@@ -10,7 +10,6 @@ var unicorn = Unicorn.extend({
   init: function() {
     this._super();
     this.addObserver('heart', function() {
-      console.log(this.get('heart'));
       actor.set('heart', this.get('heart'));
     });
   },

@@ -14,7 +14,6 @@ Application.initializer({
   after: 'store',
   initialize: function(container, application) {
     var store = App.__container__.lookup('store:main');
-    console.log("Store = ", store);
     store.push("receipt", {id: 14, unicorn: 'receipt/whotels/expense/member'});
     store.push("receipt", {id: 22, unicorn: 'receipt/whotels/expense/member'});
     store.push("report", {id: 17, unicorn: 'expense-report/basic'});
@@ -33,7 +32,6 @@ var App = Application.create({ LOG_TRANSITIONS: true });
 
 App.IndexController = Ember.ObjectController.extend({
   init: function() {
-    console.log("hello");
   }
 });
 

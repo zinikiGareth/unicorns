@@ -24,11 +24,12 @@ function Util(Oasis, oasis) {
 //      var contracts = container.lookup('capabilities:' + name);
       
       // for now, just hard code it ...
-      var contracts = ['_load', '_render'];
+      var contracts = ['_load', '_render', 'receiptEnvelope'];
 
       var hash = this.createOasisSandbox(name, heart, contracts);
       // and ask it to render itself ...
       hash.horn.render.render();
+      debugger;
       return new Oasis.RSVP.Promise(function(resolver) {
         resolver(hash);
       });
@@ -65,19 +66,23 @@ function Util(Oasis, oasis) {
     });
     
     var RenderContract = require('contract/render');
+    var ReceiptContract = require('contract/envelope/envelopeReceipt');
     var rshash = RenderContract.oasisService();
+    var erhash = ReceiptContract.oasisService();
     var sandbox = oasis.createSandbox({
       type: 'html',
       url: 'unicornSandbox.html?unicorn=' + name,
-      capabilities: ['_load','_render'],
+      capabilities: caps,
       services: {
         _load: LoadService,
-        _render: rshash.service
+        _render: rshash.service,
+        receiptEnvelope: erhash.service
       }
     });
 
     var rc = RenderContract.clientProxy(rshash.instance);
-    var horn = { render: rc };
+    var envProxy = ReceiptContract.clientProxy(erhash.instance);
+    var horn = { render: rc, receipt: envProxy };
 
     return { viewable: UnicornSandbox.create({sandbox:sandbox}), horn: horn };
   }
