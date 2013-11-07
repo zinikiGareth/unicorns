@@ -7,11 +7,12 @@ var EditReportRoute = Ember.Route.extend({
   model: function() {
     var store = this.get('container').lookup('store:main');
     return new Ember.RSVP.Promise(function(resolve) {
-      resolve(store.find('report', 17));
+      resolve({report: store.find('report', 17), receipts: Em.A([store.find('receipt', 19)])});
     });
   },
   renderTemplate: function() {
-    this.render('showUnicorn');
+    this.render('show-unicorn', {outlet: 'main'});
+    this.render('rightnav', {outlet: 'rightnav'});
   }
 });
 
