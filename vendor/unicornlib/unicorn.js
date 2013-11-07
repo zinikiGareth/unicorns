@@ -53,7 +53,6 @@ var Unicorn = Ember.Object.extend({
         as: function() {
           return new Oasis.RSVP.Promise(function(resolve) {
             bridge.whenReady.promise.then(function() {
-              debugger;
               resolve(bridge.torso.as());
             });
           })

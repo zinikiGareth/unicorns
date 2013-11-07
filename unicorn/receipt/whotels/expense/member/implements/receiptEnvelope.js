@@ -1,4 +1,5 @@
 import ReceiptContract from 'contract/envelope/envelopeReceipt';
+import ReceiptEnvelope from 'envelope/receipt';
 
 var asReceipt = ReceiptContract.implement({
   show: function(env) {
@@ -6,6 +7,7 @@ var asReceipt = ReceiptContract.implement({
   },
   as: function() {
     console.log("as");
+    return ReceiptEnvelope.create({amount: 33.62});
   }
 });
 

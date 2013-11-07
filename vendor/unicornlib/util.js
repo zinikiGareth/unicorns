@@ -29,7 +29,6 @@ function Util(Oasis, oasis) {
       var hash = this.createOasisSandbox(name, heart, contracts);
       // and ask it to render itself ...
       hash.horn.render.render();
-      debugger;
       return new Oasis.RSVP.Promise(function(resolver) {
         resolver(hash);
       });
@@ -43,7 +42,7 @@ function Util(Oasis, oasis) {
           code.set('heart', heart);
           code.render().then(function(view) {
             // TODO: need "horn"
-            resolver({viewable:UnicornGoring.create({nestedView: view, heart: heart})});
+            resolver(UnicornGoring.create({nestedView: view, heart: heart}));
           });
         });
       });
@@ -51,7 +50,7 @@ function Util(Oasis, oasis) {
       var envtemplate = emberContainer.lookup("template:envelopes/" + this.get('envelope'));
       var ret = UnicornEnvelope.create({template: envtemplate, heart: heart});
       // TODO: need some kind of "horn"
-      return new Oasis.RSVP.Promise(function(resolver) { resolver({viewable: ret})});
+      return new Oasis.RSVP.Promise(function(resolver) { resolver(ret)});
     } else
       throw new Error("Cannot handle the unicorn mode " + this.get('mode'));
   };
@@ -84,7 +83,7 @@ function Util(Oasis, oasis) {
     var envProxy = ReceiptContract.clientProxy(erhash.instance);
     var horn = { render: rc, receipt: envProxy };
 
-    return { viewable: UnicornSandbox.create({sandbox:sandbox}), horn: horn };
+    return UnicornSandbox.create({sandbox:sandbox, horn: horn});
   }
 };
 

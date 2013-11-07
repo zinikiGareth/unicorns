@@ -9,11 +9,10 @@ var actor = Actor.create();
 var unicorn = Unicorn.extend({
   init: function() {
     this._super();
-    this.addObserver('heart', function() {
-      actor.set('heart', this.get('heart'));
-    });
+    actor.set('viewables', this.get('viewables'));
   },
   heart: null,
+  viewables: Em.A(),
   actor: actor,
   implements: [Render]
 }).create();

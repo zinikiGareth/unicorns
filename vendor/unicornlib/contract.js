@@ -8,7 +8,7 @@ function createProxyMethod(channel, m, hash) {
         throw new Error("Incorrect # of args to proxy call for " + m + ", expected " + hash.in.length + " was " + arguments.length);
       if (channel instanceof Oasis.RSVP.Promise)
         return channel.then(function(ch) {
-          ch.request(m, {args: funArgs});
+          return ch.request(m, {args: funArgs});
         });
       else
         return channel.request(m, {args: funArgs});

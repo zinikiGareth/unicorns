@@ -6,9 +6,10 @@ var render = RenderContract.implement({
       var self = this;
       return new Ember.RSVP.Promise(function (resolve) {
         resolve(Ember.View.create({
+          actor: self.get('actor'),
           template:MyTemplate,
           heart:self.get('heart'),
-          figureTotal: self.get('actor').get('figureTotal')
+          viewables:self.get('viewables')
         }));
       });
     }
