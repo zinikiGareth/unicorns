@@ -65,7 +65,9 @@ define("resolver",
   }
 
   function resolveRouter(parsedName) {
-    console.log("resolving router:", parsedName);
+    if (Ember.ENV.LOG_MODULE_RESOLVER) {
+      Ember.Logger.info("resolving router:", parsedName);
+    }
     var prefix = this.namespace.modulePrefix;
     if (parsedName.fullName === 'router:main') {
       // for now, lets keep the router at app/router.js
@@ -76,7 +78,9 @@ define("resolver",
   }
 
   function resolveOther(parsedName) {
-    console.log("resolving other item:", parsedName);
+    if (Ember.ENV.LOG_MODULE_RESOLVER) {
+      Ember.Logger.info("resolving other item:", parsedName);
+    }
     var prefix = this.namespace.modulePrefix;
     Ember.assert('module prefix must be defined', prefix);
 

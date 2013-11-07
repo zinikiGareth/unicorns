@@ -27,8 +27,6 @@ function Util(Oasis, oasis) {
       var contracts = ['_load', '_render'];
 
       var hash = this.createOasisSandbox(name, heart, contracts);
-      
-
       // and ask it to render itself ...
       hash.horn.render.render();
       return new Oasis.RSVP.Promise(function(resolver) {

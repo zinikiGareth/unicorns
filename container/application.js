@@ -28,7 +28,8 @@ Application.initializer({
     });
   }
 })
-var App = Application.create({ LOG_TRANSITIONS: true, LOG_MODULE_RESOLVER: true });
+var App = Application.create({ LOG_TRANSITIONS: true });
+// Ember.ENV.LOG_MODULE_RESOLVER = true;
 
 App.IndexController = Ember.ObjectController.extend({
   init: function() {

@@ -7,7 +7,8 @@ var render = RenderContract.implement({
       return new Ember.RSVP.Promise(function (resolve) {
         resolve(Ember.View.create({
           template:MyTemplate,
-          unicorn:self.get('unicorn'),
+          heart:self.get('heart'),
+          figureTotal: self.get('figureTotal')
         }));
       });
     }
