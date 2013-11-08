@@ -1,23 +1,21 @@
+var UnicornProxyThinger = Ember.ObjectProxy.extend(Ember.PromiseProxyMixin);
+
 var actor = Ember.Object.extend({
-  actualTotal: 0,
-  figureTotal: function() {
-    var self = this;
-    var promises = [];
-    if (this.get('viewables')) {
-      this.get('viewables').forEach(function (m) {
-        var ep = m.horn.receipt.as();
-        promises.push(ep);
-      });
-    }
-    var ret = Ember.RSVP.all(promises).then(function (values) {
-      var sum = 0;
-      Em.A(values).forEach(function (v) {
-        sum += v.amount;
-      });
-      self.set('actualTotal', sum);
+  figureTotal: function(){
+    var envolopes = this.get('viewables').map(function(viewable){
+      return viewable.horn.receipt.as();
     });
-    return ret;
-  }.observes('viewables.@each.horn')
+
+    var total = Ember.RSVP.all(envolopes).then(function(envolopes){
+      return values.reduce(function (accumulator, value) {
+        return accumulator + value;
+      }, 0);
+    });
+
+    return UnicornProxyThinger.create({
+      promise: total
+    });
+  }.property('viewables.@each.horn')
 });
 
 export default actor;
