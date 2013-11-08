@@ -35,11 +35,10 @@ var list = Ember.Component.extend({
   // If we ever do need a short-term hack, we should just make sure that "viewables" is in
   // the same order as "hearts" :-)
   addBoxFor: function(pos, unicorn) {
-    var self = this;
-    var container = this.get('container');
-    
-    UnicornLib.Util.embody(container, this.get('mode'), unicorn).then(function(viewable) {
-      self.viewables.addObject(viewable);
+    var viewables = this.viewables;
+
+    UnicornLib.Util.embody(this.container, this.get('mode'), unicorn).then(function(viewable) {
+      viewable.insertAt(pos, viewable);
     });
   }
 });
