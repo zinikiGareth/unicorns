@@ -13,7 +13,8 @@ Application.initializer({
   name: 'expenses',
   after: 'store',
   initialize: function(container, application) {
-    var store = App.__container__.lookup('store:main');
+    var store = container.lookup('store:main');
+
     store.push("receipt", {id: 14, unicorn: 'receipt/whotels/expense/member'});
     store.push("receipt", {id: 19, unicorn: 'receipt/whotels/expense/member'});
     store.push("receipt", {id: 22, unicorn: 'receipt/whotels/expense/member'});
