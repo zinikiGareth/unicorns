@@ -28,11 +28,29 @@ Application.initializer({
     });
   }
 })
-var App = Application.create({ LOG_TRANSITIONS: true });
-// Ember.ENV.LOG_MODULE_RESOLVER = true;
+
+var App = Application.create({
+  LOG_ACTIVE_GENERATION: true,
+  LOG_MODULE_RESOLVER: true,
+  LOG_TRANSITIONS: true,
+  LOG_TRANSITIONS_INTERNAL: true,
+  LOG_VIEW_LOOKUPS: true
+});
+
+App.oasis = new Oasis();
 
 App.IndexController = Ember.ObjectController.extend({
   init: function() {
+    console.log("hello");
+  }
+});
+
+Ember.RSVP.configure('onerror', function(error) {
+  // ensure unhandled promises raise awareness.
+  // may result in false negatives, but visibility is more imporant
+  if (error instanceof Error) {
+    console.assert(false, error);
+    console.error(error.stack);
   }
 });
 
