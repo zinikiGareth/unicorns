@@ -19,11 +19,17 @@ Application.initializer({
     store.push("receipt", {id: 19, unicorn: 'receipt/whotels/expense/member'});
     store.push("receipt", {id: 22, unicorn: 'receipt/whotels/expense/member'});
     store.push("report", {id: 17, unicorn: 'expense-report/basic'});
+
+    // application.deferReadiness();
+    // application.deferReadiness();
     store.find('report', 17).then(function (rep) {
       store.find('receipt', 14).then(function(r) {
         rep.get('contains').addObject(r);
+        // application.advancedReadiness();
       });
+
       store.find('receipt', 22).then(function(r) {
+        // application.advancedReadiness();
         rep.get('contains').addObject(r);
       });
     });
