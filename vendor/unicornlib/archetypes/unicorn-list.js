@@ -29,9 +29,6 @@ var list = Ember.Component.extend({
   // in the place that we really want them.
   // But this is a specific instance of a general collision problem, so ultimately we
   // should replace this with some kind of "markerArray"
-  // To make matters worse, I am using "addObject" which doesn't seem to have an index,
-  // but unlike "splice" does invoke the observers.  Presumably there is some Ember.Array method
-  // that adds things at an index, but I'm not seeing it in the doc.
   // If we ever do need a short-term hack, we should just make sure that "viewables" is in
   // the same order as "hearts" :-)
   addBoxFor: function(pos, unicorn) {
