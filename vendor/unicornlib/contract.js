@@ -1,4 +1,5 @@
 import Oasis from 'oasis';
+var resolve =  Oasis.RSVP.resolve;
 
 function createProxyMethod(channel, m, hash) {
   if (hash.kind == 'report') {
@@ -6,24 +7,20 @@ function createProxyMethod(channel, m, hash) {
       var funArgs = arguments;
       if (arguments.length != hash.in.length)
         throw new Error("Incorrect # of args to proxy call for " + m + ", expected " + hash.in.length + " was " + arguments.length);
-      if (channel instanceof Oasis.RSVP.Promise)
-        return channel.then(function(ch) {
-          return ch.request(m, {args: funArgs});
-        });
-      else
-        return channel.request(m, {args: funArgs});
+
+      return resolve(channel).then(function(ch){
+        return ch.request(m, {args: funArgs});
+      });
     }
   } else if (hash.kind == 'notify') {
     return function() {
       var funArgs = arguments;
       if (arguments.length != hash.in.length)
         throw new Error("Incorrect # of args to proxy call for " + m + ", expected " + hash.in.length + " was " + arguments.length);
-      if (channel instanceof Oasis.RSVP.Promise)
-        channel.then(function(ch) {
-          ch.send(m, {args: funArgs});
-        });
-      else
-        channel.send(m, {args: funArgs});
+
+      return resolve(channel).then(function(ch){
+        return ch.send(m, {args: funArgs});
+      });
     }
   }
 }
