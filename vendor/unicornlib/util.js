@@ -4,6 +4,7 @@ import UnicornEnvelope from 'unicornlib/unicornEnvelope';
 
 function Util(Oasis, oasis) {
   var RSVP = Oasis.RSVP;
+
   this.embody = function (emberContainer, mode, heart) {
     var self = this;
 
@@ -26,7 +27,7 @@ function Util(Oasis, oasis) {
         var hash = self.createOasisSandbox(name, heart, contracts);
         // and ask it to render itself ...
         hash.horn.render.render();
-        return RSVP.resolve(hash);
+        return hash;
       } else if (mode === 'goring') {
   
         var name = heart.get('unicorn');
@@ -51,7 +52,7 @@ function Util(Oasis, oasis) {
           heart: heart
         });
         // TODO: need some kind of "horn"
-        return RSVP.resolve(ret);
+        return ret;
       } else
         throw new Error("Cannot handle the unicorn mode " + self.get('mode'));
     }
