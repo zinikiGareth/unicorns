@@ -38,7 +38,7 @@ var list = Ember.Component.extend({
     var viewables = this.viewables;
 
     UnicornLib.Util.embody(this.container, this.get('mode'), unicorn).then(function(viewable) {
-      viewable.insertAt(pos, viewable);
+      viewables.insertAt(pos, viewable);
     });
   }
 });

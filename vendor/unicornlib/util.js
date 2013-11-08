@@ -3,6 +3,7 @@ import UnicornGoring from 'unicornlib/unicornGoring';
 import UnicornEnvelope from 'unicornlib/unicornEnvelope';
 
 function Util(Oasis, oasis) {
+  var RSVP = Oasis.RSVP;
   this.embody = function (emberContainer, mode, heart) {
     var self = this;
 
