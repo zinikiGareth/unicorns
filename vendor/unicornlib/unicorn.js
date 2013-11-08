@@ -27,14 +27,11 @@ var Unicorn = Ember.Object.extend({
     consumers['_render'] = Oasis.Consumer.extend({
       requests: {
         render: function() {
-          return new Oasis.RSVP.Promise(function(resolve) {
-            bridge.whenReady.promise.then(function() {
-              console.log('in actual render');
-              self.unicorn = self.mainHash;
-              self.render().then(function(view) {
-                view.append();
-                resolve(true);
-              });
+          return bridge.whenReady.promise.then(function() {
+            console.log('in actual render');
+            self.unicorn = self.mainHash;
+            return self.render().then(function(view) {
+              view.append();
             });
           });
         }
@@ -51,11 +48,9 @@ var Unicorn = Ember.Object.extend({
       },
       requests: {
         as: function() {
-          return new Oasis.RSVP.Promise(function(resolve) {
-            bridge.whenReady.promise.then(function() {
-              resolve(bridge.torso.as());
-            });
-          })
+          return bridge.whenReady.promise.then(function() {
+            return bridge.torso.as();
+          });
         }
       }
     })
