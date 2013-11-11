@@ -5,12 +5,14 @@ import UnicornEnvelope from 'unicornlib/unicornEnvelope';
 function Util(Oasis, oasis) {
   var RSVP = Oasis.RSVP;
 
-  this.embody = function (emberContainer, mode, heart) {
+  this.embody = function (emberContainer, mode, heartP) {
     var self = this;
 
-    return RSVP.resolve(heart).then(_embody);
+console.log(heartP);
+    return RSVP.resolve(heartP).then(_embody);
      
     function _embody(heart) {
+    console.log(heart);
       if (mode === 'sandbox') {
         var name = heart.get('unicorn');
         

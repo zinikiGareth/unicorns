@@ -3,11 +3,10 @@ var sandboxWrapper = Ember.View.extend({
     Ember.$(this.get('element')).append(this.get('sandbox').el);
   },
   draggable: "true",
-  style: "padding: 20px",
+  style: "border-left-style: solid; border-left-width: 20px;",
   attributeBindings: ["draggable", "style"],
   dragStart:function(ev) {
-    // This "19" needs to possibly be more than this ...
-    ev.dataTransfer.setData('unicornHeart', "19");
+    ev.dataTransfer.setData('unicornHeart', JSON.stringify({ id: "19", unicorn: 'receipt', model: 'receipt' }));
     // TODO: we also need to say what the container is that 
     // this is currently in.
     // Recommendation: send back some JSON Object such as:

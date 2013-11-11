@@ -3,17 +3,19 @@ import UnicornLib from 'unicornlib/unicornlib';
 
 var list = Ember.Component.extend({
   viewables: Em.A(),
+  store: null,
   
   init: function() {
     var self = this;
     this._super();
+    this.store = this.container.lookup('store:main');
     var unicorns = this.get('hearts');
     unicorns.addArrayObserver({
       arrayWillChange: function() {
       },
       arrayDidChange: function(arr, start, remove, add) {
         for (var i=0;i<add;i++) {
-          var added = arr[start+i];
+          var added = arr.objectAt(start+i);
           self.addBoxFor(start+i, added);
         }
       }
@@ -51,20 +53,22 @@ var list = Ember.Component.extend({
 //    ev.preventDefault();
 //  },
   
-  dragEnter: function(ev) {
-    console.log("drag entered: ", ev);
-  },
+//  dragEnter: function(ev) {
+//    console.log("drag entered: ", ev);
+//  },
   
   drop: function(ev) {
     console.log("dropped: ", ev);
+    var hearts = this.get('hearts');
     // This comes back as just the "ID" of the heart
     // We need to get the actual model from the store
     // BETTER: we reflect this event up to the actual application
     // and looks up the object
     // How do we know where we pulled it from?
-    var heart = ev.dataTransfer.getData('unicornHeart');
-    debugger;
-    this.get('hearts').addObject(heart);
+    var dragData = JSON.parse(ev.dataTransfer.getData('unicornHeart'));
+    var record = this.store.find('receipt', dragData.id).then(function (r) {
+      hearts.addObject(r);
+    });
   }
 });
 
