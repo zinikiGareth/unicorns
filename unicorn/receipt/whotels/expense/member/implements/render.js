@@ -8,6 +8,14 @@ var render = RenderContract.implement({
         resolve(Ember.View.create({
           template:MyTemplate,
           unicorn:self.get('unicorn'),
+          draggable: "true",
+          attributeBindings: ["draggable"],
+          dragStart:function(ev) {
+            console.log("drag start ", ev);
+          },
+        drag:function(ev) {
+          console.log("drag motion ", ev);
+        }
         }));
       });
     }

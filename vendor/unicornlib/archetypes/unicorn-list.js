@@ -37,6 +37,34 @@ var list = Ember.Component.extend({
     UnicornLib.Util.embody(this.container, this.get('mode'), unicorn).then(function(viewable) {
       viewables.insertAt(pos, viewable);
     });
+  },
+  
+  // In order for "drop" to happen, we need to
+  // prevent default dragOver behavior.
+  dragOver: function(ev) {
+//    console.log("drag overed: ", ev);
+    ev.preventDefault();
+  },
+//  
+//  mouseMove: function(ev) {
+//    console.log("mouse move: ", ev);
+//    ev.preventDefault();
+//  },
+  
+  dragEnter: function(ev) {
+    console.log("drag entered: ", ev);
+  },
+  
+  drop: function(ev) {
+    console.log("dropped: ", ev);
+    // This comes back as just the "ID" of the heart
+    // We need to get the actual model from the store
+    // BETTER: we reflect this event up to the actual application
+    // and looks up the object
+    // How do we know where we pulled it from?
+    var heart = ev.dataTransfer.getData('unicornHeart');
+    debugger;
+    this.get('hearts').addObject(heart);
   }
 });
 
