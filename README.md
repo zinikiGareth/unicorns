@@ -18,8 +18,6 @@ multiple projects.
 
 The project structure is thus like this:
 
-archetypes/
-  code for the six layout archetypes
 
 container/
   the main application container; this is what would be the "application" repository
@@ -43,6 +41,8 @@ vendor/
   libraries we depend on
   unicornlib/
     the base unicorn library in module form
+    archetypes/
+      code for the six layout archetypes
 
 The "repositories" under "container/" and the "unicorns/area/name" follow the same basic format:
 
