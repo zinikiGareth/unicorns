@@ -44,6 +44,36 @@ var Coordinator = Ember.Object.extend({
     if (this.get('containerAt'))
       throw new Error("Cannot register sandbox from within a sandbox; need to use goring or envelopes");
     this.sandboxes[id] = sandbox;
+  },
+  
+  /** Upon completion of a drag motion, do all the logic associated with it.
+   * This may involve delegating operations to the sandboxes because only they have the views
+   */
+  dragItem: function(type, itemId, from, to) {
+    console.log("Want to drag item " + itemId);
+    var fromS = this.get('objectRegister')['archetype'][from];
+    var toS = this.get('objectRegister')['archetype'][from];
+    console.log("sandboxes =", fromS, toS);
+    if (fromS != null)
+      throw new Error("Need to be able to delegate dragging to a sandbox");
+    else
+      this.removeFrom(from, itemId);
+    if (toS != null)
+      throw new Error("Need to be able to delegate dragging to a sandbox");
+    else
+      this.addTo(to, type, itemId);
+  },
+  
+  /** This method should only be called in the appropriate sandbox context
+   */
+  removeFrom: function(archetypeId, itemId) {
+    Ember.View.views[archetypeId].removeItem(itemId);
+  },
+  
+  /** This method should only be called in the appropriate sandbox context
+   */
+  addTo: function(archetypeId, type, itemId) {
+    Ember.View.views[archetypeId].addItem(type, itemId);
   }
 });
 

@@ -5,7 +5,7 @@ import UnicornEnvelope from 'unicornlib/unicornEnvelope';
 function Util(Oasis, oasis, coordinator) {
   var RSVP = Oasis.RSVP;
 
-  this.embody = function (emberContainer, mode, heartP) {
+  this.embody = function (emberContainer, mode, heartP, archetypeGuid) {
     var self = this;
 
     return RSVP.resolve(heartP).then(_embody);
@@ -26,7 +26,7 @@ function Util(Oasis, oasis, coordinator) {
         // for now, just hard code it ...
         var contracts = ['_load', '_render', 'receiptEnvelope'];
   
-        var hash = self.createOasisSandbox(name, heart, contracts, guid);
+        var hash = self.createOasisSandbox(name, heart, contracts, guid, archetypeGuid);
         // and ask it to render itself ...
         hash.horn.render.render();
         return hash;
@@ -60,7 +60,7 @@ function Util(Oasis, oasis, coordinator) {
     }
   };
 
-  this.createOasisSandbox = function(name, heart, caps, guid) {
+  this.createOasisSandbox = function(name, heart, caps, guid, archetypeGuid) {
     var LoadService = Oasis.Service.extend({
       initialize: function() {
         // TODO: we should probably use the serializer ...
@@ -89,7 +89,7 @@ function Util(Oasis, oasis, coordinator) {
     var envProxy = ReceiptContract.clientProxy(erhash.instance);
     var horn = { render: rc, receipt: envProxy };
 
-    return UnicornSandbox.create({sandbox:sandbox, horn: horn, guid: guid});
+    return UnicornSandbox.create({sandbox:sandbox, horn: horn, guid: guid, archetypeGuid: archetypeGuid});
   }
 };
 

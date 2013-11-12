@@ -7,6 +7,7 @@ var list = Ember.Component.extend({
   init: function() {
     var self = this;
     this._super();
+    App.UnicornLib.coordinator.register('archetype', Ember.guidFor(this));
     this.store = this.container.lookup('store:main');
     var unicorns = this.get('hearts');
     unicorns.addArrayObserver({
@@ -35,7 +36,7 @@ var list = Ember.Component.extend({
   addBoxFor: function(pos, unicorn) {
     var viewables = this.viewables;
 
-    App.UnicornLib.util.embody(this.container, this.get('mode'), unicorn).then(function(viewable) {
+    App.UnicornLib.util.embody(this.container, this.get('mode'), unicorn, Ember.guidFor(this)).then(function(viewable) {
       viewables.insertAt(pos, viewable);
     });
   },
@@ -44,29 +45,22 @@ var list = Ember.Component.extend({
   // prevent default dragOver behavior.
   dragOver: function(ev) {
 //    console.log("drag overed: ", ev);
+    // TODO: I suspect that we need to add in more cunning here to determine if we are, or are not,
+    // a valid drop zone for this packet
     ev.preventDefault();
   },
-//  
-//  mouseMove: function(ev) {
-//    console.log("mouse move: ", ev);
-//    ev.preventDefault();
-//  },
-  
-//  dragEnter: function(ev) {
-//    console.log("drag entered: ", ev);
-//  },
   
   drop: function(ev) {
     console.log("dropped: ", ev);
-    var hearts = this.get('hearts');
-    // This comes back as just the "ID" of the heart
-    // We need to get the actual model from the store
-    // BETTER: we reflect this event up to the actual application
-    // and looks up the object
-    // How do we know where we pulled it from?
     var dragData = JSON.parse(ev.dataTransfer.getData('unicornHeart'));
-    var record = this.store.find('receipt', dragData.id).then(function (r) {
-      hearts.addObject(r);
+    App.UnicornLib.coordinator.dragItem(dragData.model, dragData.id, dragData.from, Ember.guidFor(this));
+  },
+  
+  addItem: function(type, itemId) {
+    console.log("Asked to remove item", itemId);
+    var unicorns = this.get('hearts');
+    var record = this.store.find(type, itemId).then(function (r) {
+      unicorns.addObject(r);
     });
   }
 });

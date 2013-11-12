@@ -1,17 +1,22 @@
 var sandboxWrapper = Ember.View.extend({
-  didInsertElement:function() {
-    Ember.$(this.get('element')).append(this.get('sandbox').el);
-  },
+
+  // This is implicitly draggable
   draggable: "true",
   style: "border-left-style: solid; border-left-width: 20px;",
   attributeBindings: ["draggable", "style"],
+
+  // when added to the DOM, insert the nested sandbox element
+  didInsertElement:function() {
+    Ember.$(this.get('element')).append(this.get('sandbox').el);
+  },
+  
+  // when we start to drag this object, let the coordinator know
   dragStart:function(ev) {
-    ev.dataTransfer.setData('unicornHeart', JSON.stringify({ id: "19", unicorn: 'receipt', model: 'receipt' }));
-    // TODO: we also need to say what the container is that 
-    // this is currently in.
-    // Recommendation: send back some JSON Object such as:
-    // { heart: "19", inside: "containerID", modifiers: isShiftDown }
-    console.log("wrapper drag start", ev);
+    if (!this.get('archetypeGuid')) {
+      ev.preventDefault();
+      return;
+    }
+    ev.dataTransfer.setData('unicornHeart', JSON.stringify({ id: "19", from: this.get('archetypeGuid'), unicorn: 'receipt', model: 'receipt' }));
   },
 });
 

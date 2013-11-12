@@ -18,7 +18,7 @@ var solo = Ember.Component.extend({
     var self = this;
     var container = this.get('container');
     
-    App.UnicornLib.util.embody(container, this.get('mode'), unicorn).then(function(viewable) {
+    App.UnicornLib.util.embody(container, this.get('mode'), unicorn, null).then(function(viewable) {
       self.set('shown', viewable);
     });
   }

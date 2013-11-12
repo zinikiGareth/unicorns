@@ -6,11 +6,15 @@ var list = Ember.Component.extend({
   init: function() {
     var self = this;
     this._super();
+    App.UnicornLib.coordinator.register('archetype', Ember.guidFor(this));
     var unicorns = this.get('hearts');
     unicorns.addArrayObserver({
       arrayWillChange: function() {
       },
       arrayDidChange: function(arr, start, remove, add) {
+        for (var i=start;i<start+remove;i++) {
+          self.viewables.removeObject(self.viewables[i]);
+        }
         for (var i=0;i<add;i++) {
           var added = arr[start+i];
           self.addBoxFor(start+i, added);
@@ -37,9 +41,20 @@ var list = Ember.Component.extend({
     var self = this;
     var container = this.get('container');
     
-    App.UnicornLib.util.embody(container, this.get('mode'), unicorn).then(function(viewable) {
+    App.UnicornLib.util.embody(container, this.get('mode'), unicorn, Ember.guidFor(this)).then(function(viewable) {
       self.viewables.addObject(viewable);
     });
+  },
+  
+  removeItem: function(itemId) {
+    console.log("Asked to remove item", itemId);
+    var unicorns = this.get('hearts');
+    console.log(unicorns.get('length'));
+    unicorns.forEach(function (u) {
+      if (u.get('id') == itemId)
+        unicorns.removeObject(u);
+    });
+    console.log(unicorns.get('length'));
   }
 });
 

@@ -8,14 +8,15 @@ var render = RenderContract.implement({
         resolve(Ember.View.create({
           template:MyTemplate,
           unicorn:self.get('unicorn'),
-          draggable: "true",
-          attributeBindings: ["draggable"],
-          dragStart:function(ev) {
-            console.log("drag start ", ev);
-          },
-        drag:function(ev) {
-          console.log("drag motion ", ev);
-        }
+          // TODO: this was put it here as a test, but I don't really want to do it.
+//          draggable: "true",
+//          attributeBindings: ["draggable"],
+//          dragStart:function(ev) {
+//            console.log("drag start ", ev);
+//          },
+//        drag:function(ev) {
+//          console.log("drag motion ", ev);
+//        }
         }));
       });
     }
