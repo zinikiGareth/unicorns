@@ -89,7 +89,7 @@ function Util(Oasis, oasis, coordinator) {
     var envProxy = ReceiptContract.clientProxy(erhash.instance);
     var horn = { render: rc, receipt: envProxy };
 
-    return UnicornSandbox.create({sandbox:sandbox, horn: horn, guid: guid, archetypeGuid: archetypeGuid});
+    return UnicornSandbox.create({sandbox:sandbox, heart: heart, horn: horn, guid: guid, archetypeGuid: archetypeGuid});
   }
 };
 

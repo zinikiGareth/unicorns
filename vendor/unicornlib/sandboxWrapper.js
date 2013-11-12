@@ -16,7 +16,7 @@ var sandboxWrapper = Ember.View.extend({
       ev.preventDefault();
       return;
     }
-    ev.dataTransfer.setData('unicornHeart', JSON.stringify({ id: "19", from: this.get('archetypeGuid'), unicorn: 'receipt', model: 'receipt' }));
+    ev.dataTransfer.setData('unicornHeart', JSON.stringify({ id: this.get('heart.id'), from: this.get('archetypeGuid'), unicorn: 'receipt', model: 'receipt' }));
   },
 });
 
