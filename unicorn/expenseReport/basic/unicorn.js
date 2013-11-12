@@ -1,6 +1,6 @@
 import Unicorn from 'unicornlib/unicorn';
-import Render from 'unicorn/expense-report/basic/implements/render';
-import Actor from 'unicorn/expense-report/basic/actor/actor';
+import Render from 'unicorn/expenseReport/basic/implements/render';
+import Actor from 'unicorn/expenseReport/basic/actor/actor';
 
 // TODO: I feel this should all be wrapped up in a function()
 

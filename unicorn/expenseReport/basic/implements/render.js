@@ -1,4 +1,4 @@
-import MyTemplate from 'unicorn/expense-report/basic/report';
+import MyTemplate from 'unicorn/expenseReport/basic/report';
 import RenderContract from 'contract/render';
 
 var render = RenderContract.implement({

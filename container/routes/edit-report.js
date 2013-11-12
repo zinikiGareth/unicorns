@@ -1,8 +1,6 @@
 var EditReportRoute = Ember.Route.extend({
   beforeModel: function() {
-    var container = this.get('container');
-    var rs = container.lookup('unicorn:expenseReport/basic');
-    return rs.promise;
+    return App.UnicornLib.registry.find('expenseReport/basic');
   },
   model: function() {
     var store = this.store;

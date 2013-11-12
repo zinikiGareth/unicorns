@@ -33,9 +33,9 @@ function Util(Oasis, oasis, coordinator) {
       } else if (mode === 'goring') {
   
         var name = heart.get('unicorn');
-        var goring = emberContainer.lookup("unicorn:" + name);
+        var goring = App.UnicornLib.registry.find(name);
   
-        return goring.promise.then(function(code) {
+        return goring.then(function(code) {
           // TODO: both of these are wrong ... we should implement & call the load contract
           // with the heart id & possibly "state" info
           code.set('heart', heart);

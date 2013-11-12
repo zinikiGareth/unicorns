@@ -18,7 +18,7 @@ Application.initializer({
     store.push("receipt", {id: 14, unicorn: 'receipt/whotels/expense/member'});
     store.push("receipt", {id: 19, unicorn: 'receipt/whotels/expense/member'});
     store.push("receipt", {id: 22, unicorn: 'receipt/whotels/expense/member'});
-    store.push("report", {id: 17, unicorn: 'expense-report/basic'});
+    store.push("report", {id: 17, unicorn: 'expenseReport/basic'});
 
     // application.deferReadiness();
     // application.deferReadiness();
