@@ -1,5 +1,4 @@
 import Oasis from 'oasis';
-import UnicornLib from 'unicornlib/unicornlib';
 
 var list = Ember.Component.extend({
   viewables: Em.A(),
@@ -36,7 +35,7 @@ var list = Ember.Component.extend({
   addBoxFor: function(pos, unicorn) {
     var viewables = this.viewables;
 
-    UnicornLib.Util.embody(this.container, this.get('mode'), unicorn).then(function(viewable) {
+    App.UnicornLib.util.embody(this.container, this.get('mode'), unicorn).then(function(viewable) {
       viewables.insertAt(pos, viewable);
     });
   },

@@ -2,17 +2,17 @@ import UnicornSandbox from 'unicornlib/unicornSandbox';
 import UnicornGoring from 'unicornlib/unicornGoring';
 import UnicornEnvelope from 'unicornlib/unicornEnvelope';
 
-function Util(Oasis, oasis) {
+function Util(Oasis, oasis, coordinator) {
   var RSVP = Oasis.RSVP;
 
   this.embody = function (emberContainer, mode, heartP) {
     var self = this;
 
-console.log(heartP);
     return RSVP.resolve(heartP).then(_embody);
      
     function _embody(heart) {
-    console.log(heart);
+      var guid = Ember.generateGuid(null, "unicorn");
+      coordinator.register('unicorn', guid);
       if (mode === 'sandbox') {
         var name = heart.get('unicorn');
         
@@ -26,7 +26,7 @@ console.log(heartP);
         // for now, just hard code it ...
         var contracts = ['_load', '_render', 'receiptEnvelope'];
   
-        var hash = self.createOasisSandbox(name, heart, contracts);
+        var hash = self.createOasisSandbox(name, heart, contracts, guid);
         // and ask it to render itself ...
         hash.horn.render.render();
         return hash;
@@ -60,7 +60,7 @@ console.log(heartP);
     }
   };
 
-  this.createOasisSandbox = function(name, heart, caps) {
+  this.createOasisSandbox = function(name, heart, caps, guid) {
     var LoadService = Oasis.Service.extend({
       initialize: function() {
         // TODO: we should probably use the serializer ...
@@ -75,7 +75,7 @@ console.log(heartP);
     var erhash = ReceiptContract.oasisService();
     var sandbox = oasis.createSandbox({
       type: 'html',
-      url: 'unicornSandbox.html?unicorn=' + name,
+      url: 'unicornSandbox.html?unicorn=' + name + '&guid=' + guid,
       capabilities: caps,
       services: {
         _load: LoadService,
@@ -83,12 +83,13 @@ console.log(heartP);
         receiptEnvelope: erhash.service
       }
     });
+    coordinator.registerSandbox(guid, sandbox);
 
     var rc = RenderContract.clientProxy(rshash.instance);
     var envProxy = ReceiptContract.clientProxy(erhash.instance);
     var horn = { render: rc, receipt: envProxy };
 
-    return UnicornSandbox.create({sandbox:sandbox, horn: horn});
+    return UnicornSandbox.create({sandbox:sandbox, horn: horn, guid: guid});
   }
 };
 

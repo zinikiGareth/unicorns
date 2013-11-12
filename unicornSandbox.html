@@ -15,14 +15,20 @@
 <script src='/envelope-amd.js' ></script>
 
 <script type='text/javascript'>
+// Probably we want an Ember Application, but we don't seem to need it yet
+    var UL = require("unicornlib/unicornlib");
+    App = { UnicornLib : UL.create() };
     var Bridge = require('unicornlib/bridge');
     var bridge = new Bridge();
-    var moduleName = bridge.getModuleNameFromLocation(window.location.href, "unicorn");
+    var moduleName = bridge.getNamedParameter(window.location.href, "unicorn");
+    var uuid = bridge.getNamedParameter(window.location.href, "guid");
+    App.UnicornLib.coordinator.set('uuid', uuid);
     console.log("unicorn is " + moduleName);
     bridge.init();
     var unicornP = bridge.container.lookup("unicorn:" + moduleName);
     unicornP.promise.then(function(unicorn) {
          bridge.setup(unicorn);
+         App.UnicornLib.coordinator.set('containerAt', oasis);
     });
 </script>
 </head>

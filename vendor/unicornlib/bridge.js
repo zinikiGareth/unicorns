@@ -1,11 +1,8 @@
-/* This is starting out as the basic "pingpong" Oasis
- * example.  It needs to morph to:
+/* This is the bridge into the sandbox from the containing
+ * environment.
  * 
- * 1. A bridge to the whotels receipt card
- * 2. A general purpose unicorn-as-card environment
- * 
- * This means it needs to become steadily more aware of both contracts
- * and the overall approach we're taking 
+ * On arrival here, we need to connect back to the original
+ * service once the code is loaded.
  */
 
 import Oasis from 'oasis';
@@ -30,19 +27,27 @@ function Bridge() {
     this.whenReady = Oasis.RSVP.defer();
   };
   
+  /** This method is called when the code has been loaded.
+   * The "thing that is loaded" should result in an object that was created
+   * using "Unicorn.create(...)", thus the argument here should be a unicorn.
+   */
   this.setup = function(module) {
     this.torso = module;
     this.oasis.connect(module.oasisSandboxConnector(this));
   };
   
-  this.getModuleNameFromLocation = function(href, param) {
-    var href = window.location.href;
-    var param = href.indexOf('?' + param + '='); // should also check for '&='
-    var moduleName = href.substring(param+9);
-    param = moduleName.indexOf('&');
-    if (param > 0)
-      moduleName = moduleName.substring(0, param);
-    return moduleName;
+  this.getNamedParameter = function(href, param) {
+    var pos = href.indexOf('?' + param + '=');
+    if (pos === -1)
+      pos = href.indexOf('&' + param + '=');
+    if (pos === -1)
+      return null;
+    var value = href.substring(pos+param.length+2);
+    pos = value.indexOf('&');
+    if (pos > 0)
+      value = value.substring(0, pos);
+    return value;
   };
 }
+
 export default Bridge;

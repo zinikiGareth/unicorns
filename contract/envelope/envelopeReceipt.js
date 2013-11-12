@@ -1,6 +1,6 @@
-import UnicornLib from 'unicornlib/unicornlib';
+import Contract from 'unicornlib/contract';
 
-var receipt = UnicornLib.Contract.create({
+var receipt = Contract.create({
   name: 'envelopeReceipt',
   methods: {
     show: {

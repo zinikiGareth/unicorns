@@ -1,5 +1,4 @@
 import Oasis from 'oasis';
-import UnicornLib from 'unicornlib/unicornlib';
 
 var list = Ember.Component.extend({
   viewables: Em.A(),
@@ -38,7 +37,7 @@ var list = Ember.Component.extend({
     var self = this;
     var container = this.get('container');
     
-    UnicornLib.Util.embody(container, this.get('mode'), unicorn).then(function(viewable) {
+    App.UnicornLib.util.embody(container, this.get('mode'), unicorn).then(function(viewable) {
       self.viewables.addObject(viewable);
     });
   }

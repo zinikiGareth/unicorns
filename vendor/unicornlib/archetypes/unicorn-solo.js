@@ -1,10 +1,7 @@
 import Oasis from 'oasis';
-import UnicornLib from 'unicornlib/unicornlib';
 import UnicornSandbox from 'unicornlib/unicornSandbox';
 import UnicornGoring from 'unicornlib/unicornGoring';
 import UnicornEnvelope from 'unicornlib/unicornEnvelope';
-
-var oasis = UnicornLib.oasis;
 
 var solo = Ember.Component.extend({
   shown: null,
@@ -21,7 +18,7 @@ var solo = Ember.Component.extend({
     var self = this;
     var container = this.get('container');
     
-    UnicornLib.Util.embody(container, this.get('mode'), unicorn).then(function(viewable) {
+    App.UnicornLib.util.embody(container, this.get('mode'), unicorn).then(function(viewable) {
       self.set('shown', viewable);
     });
   }

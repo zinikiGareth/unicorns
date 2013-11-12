@@ -100,7 +100,7 @@ define("resolver",
     // supports components with dashes and other stuff with underscores.
     var normalizedModuleName = chooseModuleName(requirejs._eak_seen, moduleName);
 
-    // TODO: I think we should pass down longer names (e.g. receipt/whotels/expense/member) and just prepend "unicorn/" and append "/unicorn"
+    // TODO: we should move this out of resolver and into its own thing
     if (parsedName.type == 'unicorn') {
       var unicorn = parsedName.fullNameWithoutType;
       var path = "unicorn/" + unicorn;

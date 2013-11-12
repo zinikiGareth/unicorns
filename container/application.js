@@ -6,7 +6,7 @@ import Router from 'container/router';
 var Application = Ember.Application.extend({
   modulePrefix: 'container',
   Resolver: Resolver,
-  Unicorn : UnicornLib
+  UnicornLib : UnicornLib.create()
 });
 
 Application.initializer({
@@ -43,8 +43,6 @@ var App = Application.create({
   LOG_TRANSITIONS_INTERNAL: true,
   LOG_VIEW_LOOKUPS: true
 });
-
-App.oasis = new Oasis();
 
 App.IndexController = Ember.ObjectController.extend({
   init: function() {
