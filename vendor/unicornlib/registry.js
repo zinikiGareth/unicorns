@@ -19,6 +19,21 @@ var Registry = Ember.Object.extend({
       });
     });
     return this.unicorns[name];
+  },
+  
+  getContractsFor: function(name) {
+    // somehow we need to get the list of unicorn capabilities
+    // this can be inferred from the unicorn code, but we DO NOT want to load that here
+    // Ideally, the tooling would have figured it out for us
+
+    // for now, just hard code it ...
+
+    return new Ember.RSVP.Promise(function(resolve, reject) {
+      if (name === 'receipt/whotels/expense/member')
+        resolve(['_load', '_render', 'receiptEnvelope']);
+      else
+        reject("do not have info on " + name);
+    }); 
   }
 });
 

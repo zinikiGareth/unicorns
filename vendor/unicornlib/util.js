@@ -16,22 +16,13 @@ function Util(Oasis, oasis, coordinator) {
       if (mode === 'sandbox') {
         var name = heart.get('unicorn');
         
-        // somehow we need to get the list of unicorn capabilities
-        // this can be inferred from the unicorn code, but we DO NOT want to load that here
-        // Ideally, the tooling would have figured it out for us
-  
-        // At the very least we should be able to find from the resolver:
-        // var contracts = container.lookup('capabilities:' + name);
-        
-        // for now, just hard code it ...
-        var contracts = ['_load', '_render', 'receiptEnvelope'];
-  
-        var hash = self.createOasisSandbox(name, heart, contracts, guid, archetypeGuid);
-        // and ask it to render itself ...
-        hash.horn.render.render();
-        return hash;
+        return App.UnicornLib.registry.getContractsFor(name).then(function (contracts) {
+          var hash = self.createOasisSandbox(name, heart, contracts, guid, archetypeGuid);
+          // and ask it to render itself ...
+          hash.horn.render.render();
+          return hash;
+        });
       } else if (mode === 'goring') {
-  
         var name = heart.get('unicorn');
         var goring = App.UnicornLib.registry.find(name);
   
