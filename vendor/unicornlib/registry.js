@@ -1,7 +1,8 @@
-
-
+import Oasis from 'oasis';
+ 
 var Registry = Ember.Object.extend({
   unicorns: {},
+  services: {},
   
   find: function(name) {
     console.log("Finding " + name);
@@ -30,10 +31,42 @@ var Registry = Ember.Object.extend({
 
     return new Ember.RSVP.Promise(function(resolve, reject) {
       if (name === 'receipt/whotels/expense/member')
-        resolve(['_load', '_render', 'receiptEnvelope']);
+        resolve(['_load', 'render', 'envelopeReceipt']);
       else
         reject("do not have info on " + name);
     }); 
+  },
+  
+  registerService: function(contract, provider) {
+    this.services[contract.name] = { contract: contract, provider: provider };
+  },
+  
+  /** Based on a previously registered service, create a new Oasis connector pair
+   * of client proxy and service proxy
+   */
+  provideService: function(name, opts) {
+    var services = this.services;
+    return new Ember.RSVP.Promise(function(resolve, reject) {
+      if (name === '_load') {
+        // this is a special case ...
+        var LoadService = Oasis.Service.extend({
+          initialize: function() {
+            // TODO: we should probably use the serializer ...
+            console.log("sending load");
+            this.send('load', {id: opts.id});
+          }
+        });
+        resolve({service: LoadService});
+      } else if (services[name]) {
+        var me = services[name];
+        var ps = {};
+        var os = me.contract.oasisService();
+        ps.service = os.service;
+        ps.client = me.contract.clientProxy(os.instance);
+        resolve(ps);
+      } else
+        reject("There is no service called " + name);
+    });
   }
 });
 

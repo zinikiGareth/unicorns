@@ -2,7 +2,7 @@ import UnicornSandbox from 'unicornlib/unicornSandbox';
 import UnicornGoring from 'unicornlib/unicornGoring';
 import UnicornEnvelope from 'unicornlib/unicornEnvelope';
 
-function Util(Oasis, oasis, coordinator) {
+function Util(Oasis, oasis, coordinator, registry) {
   var RSVP = Oasis.RSVP;
 
   this.embody = function (emberContainer, mode, heartP, archetypeGuid) {
@@ -17,10 +17,11 @@ function Util(Oasis, oasis, coordinator) {
         var name = heart.get('unicorn');
         
         return App.UnicornLib.registry.getContractsFor(name).then(function (contracts) {
-          var hash = self.createOasisSandbox(name, heart, contracts, guid, archetypeGuid);
-          // and ask it to render itself ...
-          hash.horn.render.render();
-          return hash;
+          return self.createOasisSandbox(name, heart, contracts, guid, archetypeGuid).then (function (hash) {
+            // and ask it to render itself ...
+            hash.horn.render.render();
+            return hash;
+          });
         });
       } else if (mode === 'goring') {
         var name = heart.get('unicorn');
@@ -52,35 +53,27 @@ function Util(Oasis, oasis, coordinator) {
   };
 
   this.createOasisSandbox = function(name, heart, caps, guid, archetypeGuid) {
-    var LoadService = Oasis.Service.extend({
-      initialize: function() {
-        // TODO: we should probably use the serializer ...
-        console.log("sending load");
-        this.send('load', {module:name, id: heart.get('id')});
-      }
+    var services = {};
+    var promises = [];
+    var horn = {};
+    Em.A(caps).forEach(function(c) {
+      promises.push(registry.provideService(c, {id: heart.get('id')}).then(function(s) {
+        services[c] = s.service;
+        if (s.client)
+          horn[c] = s.client;
+      }));
     });
-    
-    var RenderContract = require('contract/render');
-    var ReceiptContract = require('contract/envelope/envelopeReceipt');
-    var rshash = RenderContract.oasisService();
-    var erhash = ReceiptContract.oasisService();
-    var sandbox = oasis.createSandbox({
-      type: 'html',
-      url: 'unicornSandbox.html?unicorn=' + name + '&guid=' + guid,
-      capabilities: caps,
-      services: {
-        _load: LoadService,
-        _render: rshash.service,
-        receiptEnvelope: erhash.service
-      }
+    return Oasis.RSVP.all(promises).then(function() {
+      var sandbox = oasis.createSandbox({
+        type: 'html',
+        url: 'unicornSandbox.html?unicorn=' + name + '&guid=' + guid,
+        capabilities: caps,
+        services: services
+      });
+      coordinator.registerSandbox(guid, sandbox);
+
+      return UnicornSandbox.create({sandbox:sandbox, heart: heart, horn: horn, guid: guid, archetypeGuid: archetypeGuid});
     });
-    coordinator.registerSandbox(guid, sandbox);
-
-    var rc = RenderContract.clientProxy(rshash.instance);
-    var envProxy = ReceiptContract.clientProxy(erhash.instance);
-    var horn = { render: rc, receipt: envProxy };
-
-    return UnicornSandbox.create({sandbox:sandbox, heart: heart, horn: horn, guid: guid, archetypeGuid: archetypeGuid});
   }
 };
 

@@ -24,7 +24,7 @@ var Unicorn = Ember.Object.extend({
     });
     
     // just how special is actual render?
-    consumers['_render'] = Oasis.Consumer.extend({
+    consumers['render'] = Oasis.Consumer.extend({
       requests: {
         render: function() {
           return bridge.whenReady.promise.then(function() {
@@ -38,7 +38,7 @@ var Unicorn = Ember.Object.extend({
       }
     });
     
-    consumers['receiptEnvelope'] = Oasis.Consumer.extend({
+    consumers['envelopeReceipt'] = Oasis.Consumer.extend({
       events: {
         show: function(arg) {
           bridge.whenReady.promise.then(function() {

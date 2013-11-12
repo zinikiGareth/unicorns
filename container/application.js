@@ -3,6 +3,9 @@ import Resolver from 'resolver';
 import UnicornLib from 'unicornlib/unicornlib';
 import Router from 'container/router';
 
+import RenderContract from 'contract/render';
+import EnvelopeReceiptContract from 'contract/envelope/envelopeReceipt';
+
 var Application = Ember.Application.extend({
   modulePrefix: 'container',
   Resolver: Resolver,
@@ -33,6 +36,12 @@ Application.initializer({
         rep.get('contains').addObject(r);
       });
     });
+    
+    var registry = application.UnicornLib.registry;
+
+    // I think the second argument here should be the object that is being proxied
+    registry.registerService(RenderContract, null);
+    registry.registerService(EnvelopeReceiptContract, null);
   }
 })
 

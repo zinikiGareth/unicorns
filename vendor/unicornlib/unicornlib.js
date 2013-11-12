@@ -10,8 +10,9 @@ var UnicornLib = Ember.Object.extend({
     this._super();
     this.coordinator = Coordinator.create(),
     this.oasis = new Oasis();
-    this.util = new Util(Oasis, this.oasis, this.coordinator);
+    this.oasis.logger.enable();
     this.registry = new Registry();
+    this.util = new Util(Oasis, this.oasis, this.coordinator, this.registry);
   }
 });
 

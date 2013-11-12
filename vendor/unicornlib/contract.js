@@ -26,6 +26,10 @@ function createProxyMethod(channel, m, hash) {
 }
 
 var Contract = Ember.Object.extend({
+
+  /** Call this method when you wish to provide the "card"-side implementation
+   * of the contract
+   */
   implement: function(impl) {
     var name = this.get('name');
     var ret = {};
@@ -45,10 +49,12 @@ var Contract = Ember.Object.extend({
       }
     return ret;
   },
-  // create an oasis "service" object
-  // need "Initialize", "events" and "requests"
+
+  /** Call this method to create a "service" object that wraps the actual container-side
+   * object.
+   */
   oasisService: function() {
-    // for now, I'm not setting these up, because they are for "INVOKE" and "GET" methods respectively
+    // for now, I'm not putting anything in these, because they are for "INVOKE" and "GET" methods respectively
     var evhash = {};
     var reqhash = {};
     var defer = Oasis.RSVP.defer();
@@ -61,10 +67,12 @@ var Contract = Ember.Object.extend({
     });
     return { service: ret, instance: defer.promise };
   },
-  // channel is a "duck" that does the actual communication
+  
+  /** Create a proxy to be used in the container to reference the implementation in the sandbox
+   */
+  // channel is a "duck" that does the actual communication (or a promise to same)
   // all we know is it has send('name', argument) and request('name', argument)->Promise on it
   // In Oasis, it is the "Service" object
-  // Note: it can be a promise
   clientProxy: function(channel) {
     var ret = {};
     var intf = this.get('methods');
