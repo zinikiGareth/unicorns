@@ -47,20 +47,17 @@ var many = Ember.Component.extend({
   // In order for "drop" to happen, we need to
   // prevent default dragOver behavior.
   dragOver: function(ev) {
-//    console.log("drag overed: ", ev);
     // TODO: I suspect that we need to add in more cunning here to determine if we are, or are not,
     // a valid drop zone for this packet
     ev.preventDefault();
   },
   
   drop: function(ev) {
-    console.log("dropped: ", ev);
     var dragData = JSON.parse(ev.dataTransfer.getData('unicornHeart'));
     App.UnicornLib.coordinator.dragItem(dragData.model, dragData.id, dragData.from, Ember.guidFor(this));
   },
   
   addItem: function(type, itemId) {
-    console.log("Asked to remove item", itemId);
     var unicorns = this.get('hearts');
     var record = this.store.find(type, itemId).then(function (r) {
       unicorns.addObject(r);
@@ -68,9 +65,7 @@ var many = Ember.Component.extend({
   },
   
   removeItem: function(itemId) {
-    console.log("Asked to remove item", itemId);
     var unicorns = this.get('hearts');
-    console.log(unicorns.get('length'));
     var toRemove;
     unicorns.forEach(function (u) {
       if (u.get('id') == itemId)
@@ -78,7 +73,6 @@ var many = Ember.Component.extend({
     });
     if (toRemove)
       unicorns.removeObject(toRemove);
-    console.log(unicorns.get('length'));
   }
 });
 

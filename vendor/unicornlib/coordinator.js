@@ -50,10 +50,8 @@ var Coordinator = Ember.Object.extend({
    * This may involve delegating operations to the sandboxes because only they have the views
    */
   dragItem: function(type, itemId, from, to) {
-    console.log("Want to drag item " + itemId);
     var fromS = this.get('objectRegister')['archetype'][from];
     var toS = this.get('objectRegister')['archetype'][from];
-    console.log("sandboxes =", fromS, toS);
     if (fromS != null)
       throw new Error("Need to be able to delegate dragging to a sandbox");
     else
