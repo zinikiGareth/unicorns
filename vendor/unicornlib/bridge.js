@@ -33,8 +33,73 @@ function Bridge() {
    */
   this.setup = function(module) {
     this.torso = module;
-    this.oasis.connect(module.oasisSandboxConnector(this));
+    this.oasis.connect(this.oasisSandboxConnector(module, module.get('implements')));
   };
+  
+  this.oasisSandboxConnector = function(module, impls) {
+    var consumers = {};
+    var bridge = this;
+    consumers['_load'] = Oasis.Consumer.extend({
+      events: {
+        load: function(hash) {
+          console.log("in load");
+          module.mainHash = hash;
+          bridge.whenReady.resolve(module);
+        }
+      }
+    });
+
+    // render, if defined, needs to be treated specially because we need to do "view.append"
+    var rc = impls.findBy('_name', 'render');
+    if (rc) {
+      consumers['render'] = Oasis.Consumer.extend({
+        requests: {
+          render: function() {
+            return bridge.whenReady.promise.then(function() {
+              console.log('in actual render');
+              module.unicorn = module.mainHash;
+              return module.render().then(function(view) {
+                view.append();
+              });
+            });
+          }
+        }
+      });
+    }
+    
+    impls.forEach(function(ii) {
+      if (ii._name == 'render')
+        return;
+      var evs = {};
+      var reqs = {};
+      var methods = ii._contract.methods;
+      for (var p in methods) {
+        if (methods.hasOwnProperty(p)) {
+          var m = methods[p];
+          if (m.kind == 'notify') {
+            evs[p] = function() {
+              var argsArray = arguments;
+              bridge.whenReady.promise.then(function() {
+                bridge.torso[p].apply(bridge.torso, argsArray);
+              });
+            };
+          } else if (m.kind == 'report') {
+            reqs[p] = function() {
+              var argsArray = arguments;
+              return bridge.whenReady.promise.then(function() {
+                return bridge.torso[p].apply(bridge.torso, argsArray);
+              });
+            };
+          }
+        }
+      }
+      consumers[ii._name] = Oasis.Consumer.extend({events: evs, requests: reqs});
+    });
+    
+    return {
+      consumers: consumers
+    };
+  }
   
   this.getNamedParameter = function(href, param) {
     var pos = href.indexOf('?' + param + '=');

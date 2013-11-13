@@ -3,7 +3,9 @@ var PromiseObjectProxy = Ember.ObjectProxy.extend(Ember.PromiseProxyMixin);
 var actor = Ember.Object.extend({
   figureTotal: function(){
     var envelopes = this.get('viewables').map(function(viewable){
-      return viewable.horn.envelopeReceipt.as();
+      var rv = viewable.horn.envelopeReceipt.as();
+      console.log(rv);
+      return rv;
     });
 
     var total = Ember.RSVP.all(envelopes).then(function(envelopes){

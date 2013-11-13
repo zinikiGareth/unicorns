@@ -32,7 +32,7 @@ var Contract = Ember.Object.extend({
    */
   implement: function(impl) {
     var name = this.get('name');
-    var ret = {};
+    var ret = {_contract: this, _name: name};
     
     // Go through all the methods and check that impl has a valid implementation of them
     // "Valid" is hard to check ...
