@@ -22,6 +22,9 @@ function Util(Oasis, oasis, coordinator, registry) {
             hash.horn.render.render();
             return hash;
           });
+        }).fail(function(msg) {
+          console.log("Failed to create unicorn in sandbox: " + msg);
+          throw new Error(msg);
         });
       } else if (mode === 'goring') {
         var name = heart.get('unicorn');

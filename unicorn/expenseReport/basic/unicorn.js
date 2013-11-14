@@ -11,6 +11,7 @@ var unicorn = Unicorn.extend({
     this._super();
     actor.set('viewables', this.get('viewables'));
   },
+  application: null,
   heart: null,
   viewables: Em.A(),
   actor: actor,

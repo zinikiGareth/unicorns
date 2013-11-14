@@ -32,6 +32,8 @@ var Registry = Ember.Object.extend({
     return new Ember.RSVP.Promise(function(resolve, reject) {
       if (name === 'receipt/whotels/expense/member')
         resolve(['_load', 'render', 'envelopeReceipt']);
+      else if (name === 'expenseReport/basic')
+        resolve(['_load', 'render']);
       else
         reject("do not have info on " + name);
     }); 

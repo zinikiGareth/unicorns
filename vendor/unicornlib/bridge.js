@@ -8,23 +8,40 @@
 import Oasis from 'oasis';
 import Logger from 'oasis/logger';
 import Resolver from 'resolver';
+import UnicornLib from 'unicornlib/unicornlib';
 
 function Bridge() {
   this.init = function() {
     Logger.enable();
     
-    this.oasis = new Oasis();
-    this.oasis.autoInitializeSandbox();
-
-    this.app = Ember.Application.create({
-      Resolver: Resolver,
+    var bridge = this;
+    var Application = Ember.Application.extend({
       modulePrefix: 'container',
-      LOG_TRANSITIONS: true,
-      LOG_MODULE_RESOLVER: true
+      Resolver: Resolver,
+      UnicornLib : UnicornLib.create(),
     });
     
+    var app = this.app = Application.create({});
+
+    this.oasis = new Oasis();
+    this.oasis.autoInitializeSandbox();
+    
+    var moduleName = this.getNamedParameter(window.location.href, "unicorn");
+    console.log("unicorn is " + moduleName);
+    var uuid = this.getNamedParameter(window.location.href, "guid");
+
+    this.app.UnicornLib.coordinator.set('uuid', uuid);
+    this.app.UnicornLib.coordinator.set('containerAt', this.oasis);
+    
+    this.app.UnicornLib.registry.find(moduleName).then(function(unicorn) {
+      unicorn.set('application', app);
+      bridge.setup(unicorn);
+    });
+
     this.container = this.app.__container__;
     this.whenReady = Oasis.RSVP.defer();
+
+    return this.app;
   };
   
   /** This method is called when the code has been loaded.

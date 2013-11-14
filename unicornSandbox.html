@@ -1,6 +1,8 @@
 <!DOCTYPE html>
 <html>
 <head>
+<script>var ENV = { ENABLE_ALL_FEATURES: true, LOG_MODULE_RESOLVER: true };</script>
+
 <script src='/vendor/almond.js' ></script>
 <script src='/vendor/uuid.core.js' ></script>
 <script src='/vendor/resolver.js' ></script>
@@ -15,20 +17,9 @@
 <script src='/envelope-amd.js' ></script>
 
 <script type='text/javascript'>
-// Probably we want an Ember Application, but we don't seem to need it yet
-    var UL = require("unicornlib/unicornlib");
-    App = { UnicornLib : UL.create() };
     var Bridge = require('unicornlib/bridge');
     var bridge = new Bridge();
-    var moduleName = bridge.getNamedParameter(window.location.href, "unicorn");
-    var uuid = bridge.getNamedParameter(window.location.href, "guid");
-    App.UnicornLib.coordinator.set('uuid', uuid);
-    console.log("unicorn is " + moduleName);
-    bridge.init();
-    App.UnicornLib.registry.find(moduleName).then(function(unicorn) {
-         bridge.setup(unicorn);
-         App.UnicornLib.coordinator.set('containerAt', oasis);
-    });
+    App = bridge.init();
 </script>
 </head>
 <body>
