@@ -1,5 +1,5 @@
-var actor = Ember.Object.create({
-  
+var actor = Ember.Object.extend({
+  model: null
 });
 
 export default actor;

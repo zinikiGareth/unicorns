@@ -58,10 +58,12 @@ function Bridge() {
     var bridge = this;
     consumers['_unicornlib'] = Oasis.Consumer.extend({
       events: {
-        load: function(hash) {
+        load: function(cardmix) {
           console.log("in load");
-          module.mainHash = hash;
-          bridge.whenReady.resolve(module);
+          if (module.onLoad)
+            module.onLoad(cardmix).then(function() { bridge.whenReady.resolve(module); });
+          else
+            bridge.whenReady.resolve(module);
         }
       }
     });
@@ -74,7 +76,6 @@ function Bridge() {
           render: function() {
             return bridge.whenReady.promise.then(function() {
               console.log('in actual render');
-              module.unicorn = module.mainHash;
               return module.render().then(function(view) {
                 view.append();
               });

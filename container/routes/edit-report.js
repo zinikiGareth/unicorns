@@ -16,9 +16,9 @@ var EditReportRoute = Ember.Route.extend({
     // })
 
     return {
-      report: store.find('report', 17),
+      report: store.find('cardmix', 1004),
       receipts: [
-        store.find('receipt', 19)
+        store.find('cardmix', 1002)
       ]
     };
   },

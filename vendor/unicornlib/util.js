@@ -89,7 +89,7 @@ function Util(Oasis, oasis, coordinator, registry) {
     var promises = [];
     var horn = {};
     Em.A(caps).forEach(function(c) {
-      promises.push(registry.provideService(c, {id: heart.get('id')}).then(function(s) {
+      promises.push(registry.provideService(c, heart).then(function(s) {
         services[c] = s.service;
         if (s.client)
           horn[c] = s.client;

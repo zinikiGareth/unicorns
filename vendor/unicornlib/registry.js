@@ -6,6 +6,7 @@ import Oasis from 'oasis';
 var Registry = Ember.Object.extend({
   unicorns: {},
   services: {},
+  container: {},
   
   find: function(name) {
     console.log("Finding " + name);
@@ -59,14 +60,16 @@ var Registry = Ember.Object.extend({
   provideService: function(name, opts) {
     var services = this.services;
     var coordinator = this.get('coordinator');
+    var serializer = this.get('serializer');
     return new Ember.RSVP.Promise(function(resolve, reject) {
       if (name === '_unicornlib') {
         // this is a special case ...
         var UnicornLibService = Oasis.Service.extend({
           initialize: function() {
-            // TODO: we should probably use the serializer ...
-            console.log("sending load");
-            this.send('load', {id: opts.id});
+            var load = serializer.serialize(opts);
+            load.id = opts.get('id');
+            console.log("sending load", load);
+            this.send('load', load);
           },
           events: {
             register: function(hash) {

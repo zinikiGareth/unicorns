@@ -5,6 +5,10 @@ import Router from 'container/router';
 
 import RenderContract from 'contract/render';
 import EnvelopeReceiptContract from 'contract/envelope/envelopeReceipt';
+import CardMix from 'container/models/cardmix';
+
+//import HackedAccessToReportModel from 'unicorn/expenseReport/basic/actor/report';
+//import HackedAccessToReceiptModel from 'unicorn/receipt/whotels/expense/member/actor/receipt';
 
 var Application = Ember.Application.extend({
   modulePrefix: 'container',
@@ -16,15 +20,20 @@ Application.initializer({
   name: 'expenses',
   after: 'store',
   initialize: function(container, application) {
+    application.get('UnicornLib').get('registry').set('container', container);
+    application.get('UnicornLib').get('registry').set('serializer', container.lookup('serializer:-default'));
+//    container.register('model:receipt', HackedAccessToReceiptModel);
+//    container.register('model:report', HackedAccessToReportModel);
     var store = container.lookup('store:main');
 
-    store.push("receipt", {id: 14, unicorn: 'receipt/whotels/expense/member'});
-    store.push("receipt", {id: 19, unicorn: 'receipt/whotels/expense/member'});
-    store.push("receipt", {id: 22, unicorn: 'receipt/whotels/expense/member'});
-    store.push("report", {id: 17, unicorn: 'expenseReport/basic'});
+    store.push("cardmix", {id: '1001', unicorn: 'receipt/whotels/expense/member', data: "14"});
+    store.push("cardmix", {id: '1002', unicorn: 'receipt/whotels/expense/member', data: "19"});
+    store.push("cardmix", {id: '1003', unicorn: 'receipt/whotels/expense/member', data: "22"});
+    store.push("cardmix", {id: '1004', unicorn: 'expenseReport/basic', data: "17"});
 
     // application.deferReadiness();
     // application.deferReadiness();
+    /*
     store.find('report', 17).then(function (rep) {
       store.find('receipt', 14).then(function(r) {
         rep.get('contains').addObject(r);
@@ -36,6 +45,7 @@ Application.initializer({
         rep.get('contains').addObject(r);
       });
     });
+    */
     
     var registry = application.UnicornLib.registry;
 
