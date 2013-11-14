@@ -13,6 +13,12 @@ var Coordinator = Ember.Object.extend({
   sandboxes: {}, // if we are the containing environment, this is a hash of id -> sandbox
   objectRegister: {}, // hash of "type" => "id" => object, e.g. "unicorn" => id => unicorns
 
+  /** Test if we are in a sandbox (otherwise at the top level)
+   */
+  inSandbox: function() {
+    return !!this.get('uuid');
+  },
+  
   /** Record "object" creation.  At the moment, the only objects we're interested in
    * are unicorns, but I'm sure there will be others.
    * 

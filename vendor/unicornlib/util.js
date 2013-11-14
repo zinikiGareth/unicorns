@@ -57,6 +57,11 @@ function Util(Oasis, oasis, coordinator, registry) {
   };
 
   this.validateMode = function(heart, mode) {
+    // the default mode is 'goring';
+    // this gives maximum performance & flexibility, but will
+    // auto-degrade to sandbox/envelope if the unicorn is not trusted
+    if (!mode)
+      mode = 'goring';
     
     // it is always OK to ask for 'envelope' mode
     if (mode === 'envelope')
@@ -65,7 +70,16 @@ function Util(Oasis, oasis, coordinator, registry) {
     var name = heart.get('unicorn');
     
     // goring is only OK if this context trusts the new unicorn
+    if (mode === 'goring') {
+      if (!registry.trustUnicorn(name))
+        mode = 'sandbox';
+    }
     
+    // sandbox is only OK if we are not already in a sandbox
+    if (mode === 'sandbox') {
+      if (coordinator.inSandbox())
+        mode = 'envelope';
+    }
     
     return mode;
   };

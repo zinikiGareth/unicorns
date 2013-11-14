@@ -1,5 +1,8 @@
 import Oasis from 'oasis';
  
+/** I am increasingly confused about the overlap between coordinator and registry.
+ * Should we flatten coordinator in here?
+ */
 var Registry = Ember.Object.extend({
   unicorns: {},
   services: {},
@@ -37,6 +40,13 @@ var Registry = Ember.Object.extend({
       else
         reject("do not have info on " + name);
     }); 
+  },
+  
+  /** Do we trust the unicorn enough to let it operate in goring mode?
+   * This should be obtained from metadata as well ...
+   */
+  trustUnicorn: function(name) {
+    return "expenseReport/basic" === name;
   },
   
   registerService: function(contract, provider) {
