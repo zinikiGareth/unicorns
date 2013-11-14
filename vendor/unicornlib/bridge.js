@@ -31,7 +31,6 @@ function Bridge() {
     var uuid = this.getNamedParameter(window.location.href, "guid");
 
     this.app.UnicornLib.coordinator.set('uuid', uuid);
-    this.app.UnicornLib.coordinator.set('containerAt', this.oasis);
     
     this.app.UnicornLib.registry.find(moduleName).then(function(unicorn) {
       unicorn.set('application', app);

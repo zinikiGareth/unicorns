@@ -2,14 +2,14 @@
  * there is a need for general "coordination" between them.  This happens here.
  * 
  * This object exists both in the containing environment and in each sandbox,
- * but the ones in the sandbox basically just set "containerAt" and then delegate
+ * but the ones in the sandbox basically just set "uuid" and then delegate
  * all their work upwards.
  * 
  * This class is also responsible for knowing whether it is inside a sandbox already or not
  * and acting appropriately.
  */
 var Coordinator = Ember.Object.extend({
-  containerAt: null, // if we are in a sandbox, this will be set to non-null in initialization
+  uuid: null, // if we are in a sandbox, this will be set to non-null in initialization
   sandboxes: {}, // if we are the containing environment, this is a hash of id -> sandbox
   objectRegister: {}, // hash of "type" => "id" => object, e.g. "unicorn" => id => unicorns
 
@@ -22,8 +22,8 @@ var Coordinator = Ember.Object.extend({
    */
   register: function(what, id) {
     console.log('registering', what, 'with id', id);
-    if (this.get('containerAt')) {
-      this.get('ulService').send('register', {what: what, guid: id});
+    if (this.get('uuid')) {
+      this.get('ulService').send('register', {what: what, guid: id, where: this.get('uuid')});
     } else
       // if at higher level, call other guy right now
       this.registerTopLevel(what, id, null);
@@ -38,7 +38,7 @@ var Coordinator = Ember.Object.extend({
    * to update them on their location
    */
   registerSandbox: function(id, sandbox) {
-    if (this.get('containerAt'))
+    if (this.get('uuid'))
       throw new Error("Cannot register sandbox from within a sandbox; need to use goring or envelopes");
     this.sandboxes[id] = sandbox;
   },

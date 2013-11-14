@@ -61,7 +61,7 @@ var Registry = Ember.Object.extend({
           events: {
             register: function(hash) {
               console.log("UnicornLib register called with ", hash);
-              coordinator.register(hash.what, hash.guid);
+              coordinator.registerTopLevel(hash.what, hash.guid, hash.where);
             }
           }
         });

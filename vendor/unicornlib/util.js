@@ -11,6 +11,7 @@ function Util(Oasis, oasis, coordinator, registry) {
     return RSVP.resolve(heartP).then(_embody);
      
     function _embody(heart) {
+      mode = self.validateMode(heart, mode);
       var guid = Ember.generateGuid(null, "unicorn");
       coordinator.register('unicorn', guid);
       if (mode === 'sandbox') {
@@ -55,6 +56,20 @@ function Util(Oasis, oasis, coordinator, registry) {
     }
   };
 
+  this.validateMode = function(heart, mode) {
+    
+    // it is always OK to ask for 'envelope' mode
+    if (mode === 'envelope')
+      return mode;
+    
+    var name = heart.get('unicorn');
+    
+    // goring is only OK if this context trusts the new unicorn
+    
+    
+    return mode;
+  };
+  
   this.createOasisSandbox = function(name, heart, caps, guid, archetypeGuid) {
     var services = {};
     var promises = [];
