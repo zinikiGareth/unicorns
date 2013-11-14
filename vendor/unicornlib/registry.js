@@ -31,9 +31,9 @@ var Registry = Ember.Object.extend({
 
     return new Ember.RSVP.Promise(function(resolve, reject) {
       if (name === 'receipt/whotels/expense/member')
-        resolve(['_load', 'render', 'envelopeReceipt']);
+        resolve(['_unicornlib', 'render', 'envelopeReceipt']);
       else if (name === 'expenseReport/basic')
-        resolve(['_load', 'render']);
+        resolve(['_unicornlib', 'render']);
       else
         reject("do not have info on " + name);
     }); 
@@ -48,17 +48,24 @@ var Registry = Ember.Object.extend({
    */
   provideService: function(name, opts) {
     var services = this.services;
+    var coordinator = this.get('coordinator');
     return new Ember.RSVP.Promise(function(resolve, reject) {
-      if (name === '_load') {
+      if (name === '_unicornlib') {
         // this is a special case ...
-        var LoadService = Oasis.Service.extend({
+        var UnicornLibService = Oasis.Service.extend({
           initialize: function() {
             // TODO: we should probably use the serializer ...
             console.log("sending load");
             this.send('load', {id: opts.id});
+          },
+          events: {
+            register: function(hash) {
+              console.log("UnicornLib register called with ", hash);
+              coordinator.register(hash.what, hash.guid);
+            }
           }
         });
-        resolve({service: LoadService});
+        resolve({service: UnicornLibService});
       } else if (services[name]) {
         var me = services[name];
         var ps = {};

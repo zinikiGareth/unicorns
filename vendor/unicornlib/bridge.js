@@ -51,12 +51,13 @@ function Bridge() {
   this.setup = function(module) {
     this.torso = module;
     this.oasis.connect(this.oasisSandboxConnector(module, module.get('implements')));
+    this.app.UnicornLib.coordinator.set('ulService', this.oasis.consumers['_unicornlib']);
   };
   
   this.oasisSandboxConnector = function(module, impls) {
     var consumers = {};
     var bridge = this;
-    consumers['_load'] = Oasis.Consumer.extend({
+    consumers['_unicornlib'] = Oasis.Consumer.extend({
       events: {
         load: function(hash) {
           console.log("in load");

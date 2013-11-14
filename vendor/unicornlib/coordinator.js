@@ -23,10 +23,7 @@ var Coordinator = Ember.Object.extend({
   register: function(what, id) {
     console.log('registering', what, 'with id', id);
     if (this.get('containerAt')) {
-      // if at lower level, delegate up through channel
-      // TODO: we need an appropriate service, an event that can propagate up, and handlers
-      // that enable it to call "registerTopLevel" with an appropriate sandbox
-      throw new Error("Need to handle the case where we register unicorns inside sandboxes");
+      this.get('ulService').send('register', {what: what, guid: id});
     } else
       // if at higher level, call other guy right now
       this.registerTopLevel(what, id, null);
