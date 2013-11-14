@@ -9,8 +9,10 @@ var many = Ember.Component.extend({
     this._super();
     App.UnicornLib.coordinator.register('archetype', Ember.guidFor(this));
     this.store = this.container.lookup('store:main');
-    var unicorns = this.get('hearts');
-    unicorns.addArrayObserver({
+    var mixes = this.get('mixes');
+    if (!mixes)
+      mixes = Em.A();
+    mixes.addArrayObserver({
       arrayWillChange: function() {
       },
       arrayDidChange: function(arr, start, remove, add) {
@@ -24,7 +26,7 @@ var many = Ember.Component.extend({
       }
     });
     var j=0;
-    unicorns.forEach(function (p) {
+    mixes.forEach(function (p) {
       self.addBoxFor(j, p);
       j++;
     });

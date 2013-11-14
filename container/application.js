@@ -33,19 +33,17 @@ Application.initializer({
 
     // application.deferReadiness();
     // application.deferReadiness();
-    /*
-    store.find('report', 17).then(function (rep) {
-      store.find('receipt', 14).then(function(r) {
-        rep.get('contains').addObject(r);
+    store.find('cardmix', 1004).then(function (rep) {
+      store.find('cardmix', 1001).then(function(r) {
+        rep.get('children').addObject(r);
         // application.advancedReadiness();
       });
 
-      store.find('receipt', 22).then(function(r) {
+      store.find('cardmix', 1003).then(function(r) {
         // application.advancedReadiness();
-        rep.get('contains').addObject(r);
+        rep.get('children').addObject(r);
       });
     });
-    */
     
     var registry = application.UnicornLib.registry;
 

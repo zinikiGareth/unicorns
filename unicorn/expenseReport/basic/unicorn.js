@@ -11,6 +11,13 @@ var unicorn = Unicorn.extend({
     this._super();
     actor.set('viewables', this.get('viewables'));
   },
+  onLoad: function(cardmix) {
+    var store = App.__container__.lookup('store:main');
+//    App.__container__.register("model:receipt", Receipt);
+    actor.set('cardmix', cardmix);
+//    actor.set('model', store.push(Receipt, {id: cardmix.data, total: 44.03, location: 'Las Vegas, NV'}));
+    return Ember.RSVP.resolve(true);
+  },
   application: null,
   heart: null,
   viewables: Em.A(),

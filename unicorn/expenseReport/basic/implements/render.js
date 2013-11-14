@@ -4,6 +4,7 @@ import RenderContract from 'contract/render';
 var render = RenderContract.implement({
     render: function() {
       var self = this;
+      debugger;
       return new Ember.RSVP.resolve(Ember.View.create({
         actor: self.get('actor'),
 
@@ -18,7 +19,7 @@ var render = RenderContract.implement({
 //      container: self.get('application').__container__,
 
         template:MyTemplate,
-        heart:self.get('heart'),
+        mixes:self.get('actor.cardmix.children.content'),
         viewables:self.get('viewables')
       }));
     }

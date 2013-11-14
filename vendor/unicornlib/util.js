@@ -32,14 +32,17 @@ function Util(Oasis, oasis, coordinator, registry) {
         var goring = App.UnicornLib.registry.find(name);
   
         return goring.then(function(code) {
-          // TODO: both of these are wrong ... we should implement & call the load contract
-          // with the heart id & possibly "state" info
-          code.set('heart', heart);
-          return code.render().then(function(view) {
-            // TODO: need "horn"
-            return UnicornGoring.create({
-              nestedView: view,
-              heart: heart
+          var promise;
+          if (code.onLoad)
+            promise = code.onLoad(heart);
+          else
+            promise = Ember.RSVP.resolve(true);
+          return promise.then(function() {
+            return code.render().then(function(view) {
+              // TODO: need "horn"
+              return UnicornGoring.create({
+                nestedView: view
+              });
             });
           });
         });
