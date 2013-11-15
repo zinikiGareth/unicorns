@@ -56,18 +56,18 @@ var many = Ember.Component.extend({
   
   drop: function(ev) {
     var dragData = JSON.parse(ev.dataTransfer.getData('unicornHeart'));
-    App.UnicornLib.coordinator.dragItem(dragData.model, dragData.id, dragData.from, Ember.guidFor(this));
+    App.UnicornLib.coordinator.dragItem(dragData.id, dragData.from, Ember.guidFor(this));
   },
   
-  addItem: function(type, itemId) {
-    var unicorns = this.get('hearts');
-    var record = this.store.find(type, itemId).then(function (r) {
+  addItem: function(itemId) {
+    var unicorns = this.get('mixes');
+    var record = this.store.find('cardmix', itemId).then(function (r) {
       unicorns.addObject(r);
     });
   },
   
   removeItem: function(itemId) {
-    var unicorns = this.get('hearts');
+    var unicorns = this.get('mixes');
     var toRemove;
     unicorns.forEach(function (u) {
       if (u.get('id') == itemId)
