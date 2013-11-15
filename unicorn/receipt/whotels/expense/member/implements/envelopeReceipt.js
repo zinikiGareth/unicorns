@@ -6,7 +6,7 @@ var asReceipt = ReceiptContract.implement({
     console.log('need to implement asReceipt.show()');
   },
   as: function() {
-    return EnvelopeReceipt.create({amount: 33.62});
+    return EnvelopeReceipt.create({ amount: this.get('actor.model.total') });
   }
 });
 
