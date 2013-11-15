@@ -8,11 +8,11 @@ import Util from 'unicornlib/util';
 var UnicornLib = Ember.Object.extend({
   init: function() {
     this._super();
-    this.coordinator = Coordinator.create(),
     this.oasis = new Oasis();
     this.oasis.logger.enable();
-    this.registry = Registry.create({coordinator: this.coordinator});
-    this.util = new Util(Oasis, this.oasis, this.coordinator, this.registry);
+    this.registry = Registry.create();
+    this.coordinator = Coordinator.create({registry: this.registry}),
+    this.util = new Util(Oasis, this.oasis, this.registry);
   }
 });
 

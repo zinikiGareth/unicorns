@@ -2,7 +2,7 @@ import UnicornSandbox from 'unicornlib/unicornSandbox';
 import UnicornGoring from 'unicornlib/unicornGoring';
 import UnicornEnvelope from 'unicornlib/unicornEnvelope';
 
-function Util(Oasis, oasis, coordinator, registry) {
+function Util(Oasis, oasis, registry) {
   var RSVP = Oasis.RSVP;
 
   this.embody = function (emberContainer, mode, heartP, archetypeGuid) {
@@ -13,7 +13,7 @@ function Util(Oasis, oasis, coordinator, registry) {
     function _embody(heart) {
       mode = self.validateMode(heart, mode);
       var guid = Ember.generateGuid(null, "unicorn");
-      coordinator.register('unicorn', guid);
+      registry.register('unicorn', guid);
       if (mode === 'sandbox') {
         var name = heart.get('unicorn');
         
@@ -30,18 +30,34 @@ function Util(Oasis, oasis, coordinator, registry) {
       } else if (mode === 'goring') {
         var name = heart.get('unicorn');
         var goring = App.UnicornLib.registry.find(name);
-  
         return goring.then(function(code) {
-          var promise;
-          if (code.onLoad)
-            promise = code.onLoad(heart);
-          else
-            promise = Ember.RSVP.resolve(true);
-          return promise.then(function() {
-            return code.render().then(function(view) {
-              // TODO: need "horn"
-              return UnicornGoring.create({
-                nestedView: view
+          return App.UnicornLib.registry.getContractsFor(name).then(function (contracts) {
+            // TODO: we need to create horn&mouth by calling Contract.clientProxy & Contract.sandboxProxy on the channels
+            var horn = {};
+            var mouth = {};
+            var services = {};
+            var promises = [];
+            Em.A(contracts).forEach(function(c) {
+              promises.push(registry.provideClonedChannelFor(c, heart).then(function(s) {
+                services[c] = s.service;
+                // TODO: fill in mouth with proxy-over-channel
+                if (s.client)
+                  horn[c] = s.client;
+              }));
+            });
+            var promise;
+            if (code.onLoad)
+              promise = code.onLoad(heart);
+            else
+              promise = Ember.RSVP.resolve(true);
+            if (code.onConnect)
+              promise = promise.then(function() { debugger; code.onConnect(mouth); });
+            return promise.then(function() {
+              debugger;
+              return code.render().then(function(view) {
+                return UnicornGoring.create({
+                  nestedView: view
+                });
               });
             });
           });
@@ -80,7 +96,7 @@ function Util(Oasis, oasis, coordinator, registry) {
     
     // sandbox is only OK if we are not already in a sandbox
     if (mode === 'sandbox') {
-      if (coordinator.inSandbox())
+      if (registry.inSandbox())
         mode = 'envelope';
     }
     
@@ -92,7 +108,7 @@ function Util(Oasis, oasis, coordinator, registry) {
     var promises = [];
     var horn = {};
     Em.A(caps).forEach(function(c) {
-      promises.push(registry.provideService(c, heart).then(function(s) {
+      promises.push(registry.provideOasisServiceFor(c, heart).then(function(s) {
         services[c] = s.service;
         if (s.client)
           horn[c] = s.client;
@@ -105,7 +121,7 @@ function Util(Oasis, oasis, coordinator, registry) {
         capabilities: caps,
         services: services
       });
-      coordinator.registerSandbox(guid, sandbox);
+      registry.registerSandbox(guid, sandbox);
 
       return UnicornSandbox.create({sandbox:sandbox, heart: heart, horn: horn, guid: guid, archetypeGuid: archetypeGuid});
     });

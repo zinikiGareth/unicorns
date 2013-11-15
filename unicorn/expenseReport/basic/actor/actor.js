@@ -1,6 +1,8 @@
 var PromiseObjectProxy = Ember.ObjectProxy.extend(Ember.PromiseProxyMixin);
 
 var actor = Ember.Object.extend({
+  client: "Ziniki Network",
+  location: "Arlington, VA",
   figureTotal: function(){
     var envelopes = this.get('viewables').map(function(viewable){
       var rv = viewable.horn.envelopeReceipt.as();

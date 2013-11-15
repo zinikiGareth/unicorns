@@ -30,7 +30,7 @@ function Bridge() {
     console.log("unicorn is " + moduleName);
     var uuid = this.getNamedParameter(window.location.href, "guid");
 
-    this.app.UnicornLib.coordinator.set('uuid', uuid);
+    this.app.UnicornLib.registry.set('uuid', uuid);
     
     this.app.UnicornLib.registry.find(moduleName).then(function(unicorn) {
       unicorn.set('application', app);
@@ -50,7 +50,10 @@ function Bridge() {
   this.setup = function(module) {
     this.torso = module;
     this.oasis.connect(this.oasisSandboxConnector(module, module.get('implements')));
-    this.app.UnicornLib.coordinator.set('ulService', this.oasis.consumers['_unicornlib']);
+    this.app.UnicornLib.registry.set('ulService', this.oasis.consumers['_unicornlib']);
+    // TODO: this may need yet more promise coordination with onLoad()
+    if (module.onConnect)
+      module.onConnect(this.oasis.consumers);
   };
   
   this.oasisSandboxConnector = function(module, impls) {

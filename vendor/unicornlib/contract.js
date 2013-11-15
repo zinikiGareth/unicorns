@@ -58,13 +58,13 @@ var Contract = Ember.Object.extend({
     var evhash = {};
     var reqhash = {};
     var defer = Oasis.RSVP.defer();
-    var ret = Oasis.Service.extend({
+    var ret = {
       initialize: function() {
         defer.resolve(this);
       },
       events: evhash,
       requests: reqhash
-    });
+    };
     return { service: ret, instance: defer.promise };
   },
   

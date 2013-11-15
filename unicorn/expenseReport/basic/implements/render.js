@@ -4,7 +4,6 @@ import RenderContract from 'contract/render';
 var render = RenderContract.implement({
     render: function() {
       var self = this;
-      debugger;
       return new Ember.RSVP.resolve(Ember.View.create({
         actor: self.get('actor'),
 

@@ -7,7 +7,7 @@ var many = Ember.Component.extend({
   init: function() {
     var self = this;
     this._super();
-    App.UnicornLib.coordinator.register('archetype', Ember.guidFor(this));
+    App.UnicornLib.registry.register('archetype', Ember.guidFor(this));
     this.store = this.container.lookup('store:main');
     var mixes = this.get('mixes');
     if (!mixes)

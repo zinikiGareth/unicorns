@@ -1,5 +1,7 @@
 <div>
 <h1>Expense Report</h1>
-{{unicorn-list mixes=view.mixes viewables=view.viewables mode='goring' envelope='receipt'}}
+Client: {{view.actor.client}}<p>
+Location: {{view.actor.location}}<p>
 Total: {{view.actor.figureTotal.content}}
+{{unicorn-list mixes=view.mixes viewables=view.viewables mode='goring' envelope='receipt'}}
 </div>

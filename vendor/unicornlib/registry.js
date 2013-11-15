@@ -1,12 +1,57 @@
 import Oasis from 'oasis';
+import CloneChannel from 'unicornlib/cloneChannel';
  
-/** I am increasingly confused about the overlap between coordinator and registry.
- * Should we flatten coordinator in here?
+/**
+ * This object exists both in the containing environment and in each sandbox,
+ * but the ones in the sandbox basically just set "uuid" and then delegate
+ * all their work upwards.
+ * 
+ * This class is also responsible for knowing whether it is inside a sandbox already or not
+ * and acting appropriately.
  */
 var Registry = Ember.Object.extend({
   unicorns: {},
   services: {},
   container: {},
+  uuid: null, // if we are in a sandbox, this will be set to non-null in initialization
+  sandboxes: {}, // if we are the containing environment, this is a hash of id -> sandbox
+  objectRegister: {}, // hash of "type" => "id" => object, e.g. "unicorn" => id => unicorns
+  
+  /** Test if we are in a sandbox (otherwise at the top level)
+   */
+  inSandbox: function() {
+    return !!this.get('uuid');
+  },
+  
+  /** Record "object" creation.  At the moment, the only objects we're interested in
+   * are unicorns, but I'm sure there will be others.
+   * 
+   * This method ultimately invokes "registerTopLevel" in the containing environment, synthesizing
+   * a third parameter which is its own sandbox id; if this is called from within the containing
+   * environment, that is "null".
+   */
+  register: function(what, id) {
+    console.log('registering', what, 'with id', id);
+    if (this.get('uuid')) {
+      this.get('ulService').send('register', {what: what, guid: id, where: this.get('uuid')});
+    } else
+      // if at higher level, call other guy right now
+      this.registerTopLevel(what, id, null);
+  },
+  registerTopLevel: function(what, id, where) { // call in container specifying where the object actually is (may be container or sandbox)
+    if (!this.objectRegister[what])
+      this.objectRegister[what] = { };
+    this.objectRegister[what][id] = where;
+  },
+  
+  /** When a new sandbox is created to house a unicorn, register it here so that we can connect to them
+   * to update them on their location
+   */
+  registerSandbox: function(id, sandbox) {
+    if (this.get('uuid'))
+      throw new Error("Cannot register sandbox from within a sandbox; need to use goring or envelopes");
+    this.sandboxes[id] = sandbox;
+  },
   
   find: function(name) {
     console.log("Finding " + name);
@@ -57,14 +102,28 @@ var Registry = Ember.Object.extend({
   /** Based on a previously registered service, create a new Oasis connector pair
    * of client proxy and service proxy
    */
-  provideService: function(name, opts) {
+  provideOasisServiceFor: function(name, opts) {
+    return this.createServicePair(name, opts).then(function(pair) {
+      return { client: pair.client, service: Oasis.Service.extend(pair.service) };
+    });
+  },
+  
+  provideClonedChannelFor: function(name, opts) {
+    return this.createServicePair(name, opts).then(function(pair) {
+      return { client: pair.client, service: new CloneChannel(pair.service) };
+    });
+  },
+  
+  /** Create the fundamental connection pair based on a communication channel
+   */
+  createServicePair: function(name, opts) {
     var services = this.services;
-    var coordinator = this.get('coordinator');
     var serializer = this.get('serializer');
+    var self = this;
     return new Ember.RSVP.Promise(function(resolve, reject) {
       if (name === '_unicornlib') {
         // this is a special case ...
-        var UnicornLibService = Oasis.Service.extend({
+        var UnicornLibService = {
           initialize: function() {
             var load = serializer.serialize(opts);
             load.id = opts.get('id');
@@ -74,18 +133,15 @@ var Registry = Ember.Object.extend({
           events: {
             register: function(hash) {
               console.log("UnicornLib register called with ", hash);
-              coordinator.registerTopLevel(hash.what, hash.guid, hash.where);
+              self.registerTopLevel(hash.what, hash.guid, hash.where);
             }
           }
-        });
-        resolve({service: UnicornLibService});
+        };
+        // One day we will probably want a client
+        resolve({client: null, service: UnicornLibService});
       } else if (services[name]) {
-        var me = services[name];
-        var ps = {};
-        var os = me.contract.oasisService();
-        ps.service = os.service;
-        ps.client = me.contract.clientProxy(os.instance);
-        resolve(ps);
+        var os = services[name].contract.oasisService();
+        resolve({ client: services[name].contract.clientProxy(os.instance), service: os.service });
       } else
         reject("There is no service called " + name);
     });
