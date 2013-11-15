@@ -12,7 +12,7 @@ import UnicornLib from 'unicornlib/unicornlib';
 
 function Bridge() {
   this.init = function() {
-    Logger.enable();
+//    Logger.enable();
     
     var bridge = this;
     var Application = Ember.Application.extend({
@@ -27,7 +27,6 @@ function Bridge() {
     this.oasis.autoInitializeSandbox();
     
     var moduleName = this.getNamedParameter(window.location.href, "unicorn");
-    console.log("unicorn is " + moduleName);
     var uuid = this.getNamedParameter(window.location.href, "guid");
 
     this.app.UnicornLib.registry.set('uuid', uuid);
@@ -59,10 +58,10 @@ function Bridge() {
   this.oasisSandboxConnector = function(module, impls) {
     var consumers = {};
     var bridge = this;
+    // NOTE: this is duplicated with cloneChannel
     consumers['_unicornlib'] = Oasis.Consumer.extend({
       events: {
         load: function(cardmix) {
-          console.log("in load");
           if (module.onLoad)
             module.onLoad(cardmix).then(function() { bridge.whenReady.resolve(module); });
           else
@@ -78,8 +77,7 @@ function Bridge() {
         requests: {
           render: function() {
             return bridge.whenReady.promise.then(function() {
-              console.log('in actual render');
-              return module.render().then(function(view) {
+              return module.render.render.apply(module).then(function(view) {
                 view.append();
               });
             });
@@ -101,14 +99,14 @@ function Bridge() {
             evs[p] = function() {
               var argsArray = arguments;
               bridge.whenReady.promise.then(function() {
-                bridge.torso[p].apply(bridge.torso, argsArray);
+                bridge.torso[ii._name][p].apply(bridge.torso, argsArray);
               });
             };
           } else if (m.kind == 'report') {
             reqs[p] = function() {
               var argsArray = arguments;
               return bridge.whenReady.promise.then(function() {
-                return bridge.torso[p].apply(bridge.torso, argsArray);
+                return bridge.torso[ii._name][p].apply(bridge.torso, argsArray);
               });
             };
           }

@@ -37,26 +37,28 @@ function Util(Oasis, oasis, registry) {
             var mouth = {};
             var services = {};
             var promises = [];
+            var bridge = { whenReady: Oasis.RSVP.defer() };
             Em.A(contracts).forEach(function(c) {
-              promises.push(registry.provideClonedChannelFor(c, heart).then(function(s) {
+              promises.push(registry.provideClonedChannelFor(c, heart, code, bridge).then(function(s) {
                 services[c] = s.service;
                 // TODO: fill in mouth with proxy-over-channel
                 if (s.client)
                   horn[c] = s.client;
               }));
             });
-            var promise;
-            if (code.onLoad)
-              promise = code.onLoad(heart);
-            else
-              promise = Ember.RSVP.resolve(true);
-            if (code.onConnect)
-              promise = promise.then(function() { debugger; code.onConnect(mouth); });
-            return promise.then(function() {
-              debugger;
-              return code.render().then(function(view) {
-                return UnicornGoring.create({
-                  nestedView: view
+            return Oasis.RSVP.all(promises).then(function() {
+              services['_unicornlib'].initialize();
+              var promise;
+              if (code.onConnect)
+                promise = code.onConnect(mouth);
+              else
+                promise = Ember.RSVP.resolve(true);
+              return promise.then(function() {
+                return horn.render.render().then(function(view) {
+                  return UnicornGoring.create({
+                    horn: horn,
+                    nestedView: view
+                  });
                 });
               });
             });

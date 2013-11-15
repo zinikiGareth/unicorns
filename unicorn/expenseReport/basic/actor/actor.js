@@ -6,7 +6,6 @@ var actor = Ember.Object.extend({
   figureTotal: function(){
     var envelopes = this.get('viewables').map(function(viewable){
       var rv = viewable.horn.envelopeReceipt.as();
-      console.log(rv);
       return rv;
     });
 

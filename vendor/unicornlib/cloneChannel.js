@@ -1,15 +1,28 @@
 
-function CloneChannel(dest) {
-  this.initialize = dest.initialize;
-  this.events = dest.events;
-  this.requests = dest.requests;
+function CloneChannel(name, proxy, dest, bridge) {
+  this.initialize = proxy.initialize;
+  this.events = proxy.events;
+  this.requests = proxy.requests;
   
+  this.__dest = dest;
+  // Note: this is duplicated with bridge
+  dest['_unicornlib'] = {
+    load: function(cardmix) {
+      if (dest.onLoad)
+        dest.onLoad(cardmix).then(function() { bridge.whenReady.resolve(dest); });
+      else
+        bridge.whenReady.resolve(dest);
+    }
+  };
+
   this.send = function(cmd, obj) {
-    Ember.run.once(this, cmd, Kamino.clone(obj));
+    new Ember.RSVP.Promise(function(resolve) {
+      resolve(dest[name][cmd].apply(dest, [Kamino.clone(obj)]));
+    });
   };
   this.request = function(cmd, obj) {
     return new Ember.RSVP.Promise(function (resolve) {
-      resolve(this[cmd](Kamino.clone(obj)));
+      resolve(dest[name][cmd].apply(dest, [Kamino.clone(obj)]));
     })
   };
 };

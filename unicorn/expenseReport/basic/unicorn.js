@@ -1,6 +1,7 @@
 import Unicorn from 'unicornlib/unicorn';
 import Render from 'unicorn/expenseReport/basic/implements/render';
 import Actor from 'unicorn/expenseReport/basic/actor/actor';
+import CardMix from 'container/models/cardmix';
 
 // TODO: I feel this should all be wrapped up in a function()
 
@@ -13,10 +14,13 @@ var unicorn = Unicorn.extend({
   },
   onLoad: function(cardmix) {
     var store = App.__container__.lookup('store:main');
+    var serializer = App.__container__.lookup('serializer:-default');
+    store.push(CardMix, cardmix);
+    return store.find(CardMix, cardmix.id).then(function(cm) {
 //    App.__container__.register("model:receipt", Receipt);
-    actor.set('cardmix', cardmix);
+      actor.set('cardmix', cm);
 //    actor.set('model', store.push(Receipt, {id: cardmix.data, total: 44.03, location: 'Las Vegas, NV'}));
-    return Ember.RSVP.resolve(true);
+    })
   },
   onConnect: function(proxy) {
     // The argument passed in here is a proxy back to the containing environment

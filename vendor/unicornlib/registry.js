@@ -54,7 +54,6 @@ var Registry = Ember.Object.extend({
   },
   
   find: function(name) {
-    console.log("Finding " + name);
     if (this.unicorns[name])
       return this.unicorns[name];
     
@@ -108,9 +107,11 @@ var Registry = Ember.Object.extend({
     });
   },
   
-  provideClonedChannelFor: function(name, opts) {
+  provideClonedChannelFor: function(name, opts, code, bridge) {
     return this.createServicePair(name, opts).then(function(pair) {
-      return { client: pair.client, service: new CloneChannel(pair.service) };
+      var service = new CloneChannel(name, pair.service, code, bridge);
+      service.initialize();
+      return { client: pair.client, service: service };
     });
   },
   
@@ -127,12 +128,10 @@ var Registry = Ember.Object.extend({
           initialize: function() {
             var load = serializer.serialize(opts);
             load.id = opts.get('id');
-            console.log("sending load", load);
             this.send('load', load);
           },
           events: {
             register: function(hash) {
-              console.log("UnicornLib register called with ", hash);
               self.registerTopLevel(hash.what, hash.guid, hash.where);
             }
           }

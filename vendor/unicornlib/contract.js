@@ -10,6 +10,8 @@ function createProxyMethod(channel, m, hash) {
 
       return resolve(channel).then(function(ch){
         return ch.request(m, {args: funArgs});
+      }).fail(function(msg) {
+        console.log("send failed; response =", msg);
       });
     }
   } else if (hash.kind == 'notify') {

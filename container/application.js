@@ -63,7 +63,6 @@ var App = Application.create({
 
 App.IndexController = Ember.ObjectController.extend({
   init: function() {
-    console.log("hello");
   }
 });
 
